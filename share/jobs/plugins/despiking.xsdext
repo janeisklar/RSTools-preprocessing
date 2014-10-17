@@ -1,0 +1,7 @@
+<xs:complexType name="despiking">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for despiking -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>

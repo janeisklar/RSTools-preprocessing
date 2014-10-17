@@ -3,8 +3,6 @@
 !*.cpp
 !*.h
 !*.hpp
-!slicetiming
-!despiking
 !.gitignore
-!*.am
-
+!tool
+!task
