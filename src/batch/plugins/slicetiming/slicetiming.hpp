@@ -24,10 +24,14 @@ class SliceTiming : Plugin {
 
         static RSTool* createSliceTimingTool();
         static RSTask* createSliceTimingTask();
+        static RSTool* createMBSliceTimingTool();
+        static RSTask* createMBSliceTimingTask();
         
     protected:
         rsToolRegistration* createSliceTimingToolRegistration();
         rsXSDExtension* createSliceTimingToolXSDExtension();
+        rsToolRegistration* createMBSliceTimingToolRegistration();
+        rsXSDExtension* createMBSliceTimingToolXSDExtension();
 };
 
 }}}} // namespace rstools::batch::plugins::slicetiming

@@ -29,11 +29,13 @@ public:
     bool isEverythingFine();
     rsUIInterface* createUI();
     void printCallString(FILE *stream);
+    void setMultibandActive(bool mbActive);
     
 protected:
     void _parseParams(int argc, char * argv[]);
     void _init();
     virtual void _run();
+    bool multibandActive;
     
     rstools::batch::plugins::slicetiming::task::SliceTiming* getSliceTimingTask();
     

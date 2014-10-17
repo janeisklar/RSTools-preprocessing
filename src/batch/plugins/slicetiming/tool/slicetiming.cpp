@@ -16,7 +16,9 @@ void SliceTiming::_parseParams(int argc, char * argv[])
 }
     
 void SliceTiming::_init()
-{}
+{
+    setMultibandActive(false);
+}
 
 void SliceTiming::destroy()
 {}
@@ -37,10 +39,7 @@ void SliceTiming::_run()
 }
 
 rsUIInterface* SliceTiming::createUI()
-{
-    /*GOptionArgFunc cbAcquisitionDirection = (GOptionArgFunc)parseAcquisitionDirection;
-    GOptionArgFunc cbSliceIndexing = (GOptionArgFunc)parseSliceIndexing;*/
-    
+{    
     rsUIOption *o;
     rsUIInterface* interface = rsUINewInterface();
     interface->description   = rsString("Slice Timing (FSL's slicetimer)");
@@ -69,28 +68,39 @@ rsUIInterface* SliceTiming::createUI()
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
     
-    o = rsUINewOption();
-    o->name                = rsString("sliceIndexing");
-    o->shorthand           = 'r';
-    o->type                = G_OPTION_ARG_CALLBACK;
-    o->cli_description     = rsString("order of slice-indexing");
-    o->cli_arg_description = rsString("<order>");
-    o->defaultValue        = rsString("bottom-up");
-    rsUIOptionValue allowedValues[] = {
-      {rsString("bottom-up"),  rsString("slices were acquired bottom-up")},
-      {rsString("top-down"),  rsString("slices were acquired top-down")},
-      NULL
-    };
-    rsUISetOptionValues(o, allowedValues);
-    rsUIAddOption(interface, o);
     
-    o = rsUINewOption();
-    o->name                = rsString("repeat");
-    o->shorthand           = 'r';
-    o->type                = G_OPTION_ARG_DOUBLE;
-    o->cli_description     = rsString("specify TR of data");
-    o->cli_arg_description = rsString("<rate in s>");
-    rsUIAddOption(interface, o);
+    if ( multibandActive ) { 
+        o = rsUINewOption();
+        o->name                = rsString("tcustom");
+        o->shorthand           = 't';
+        o->type                = G_OPTION_ARG_FILENAME;
+        o->cli_description     = rsString("filename of single-column slice timings, in fractions of TR, +ve values shift slices forwards in time.");
+        o->cli_arg_description = rsString("<txt-file>");
+        rsUIAddOption(interface, o);
+    } else {
+        o = rsUINewOption();
+        o->name                = rsString("sliceIndexing");
+        o->shorthand           = 'r';
+        o->type                = G_OPTION_ARG_CALLBACK;
+        o->cli_description     = rsString("order of slice-indexing");
+        o->cli_arg_description = rsString("<order>");
+        o->defaultValue        = rsString("bottom-up");
+        rsUIOptionValue allowedValues[] = {
+          {rsString("bottom-up"),  rsString("slices were acquired bottom-up")},
+          {rsString("top-down"),  rsString("slices were acquired top-down")},
+          NULL
+        };
+        rsUISetOptionValues(o, allowedValues);
+        rsUIAddOption(interface, o);
+       
+        o = rsUINewOption();
+        o->name                = rsString("repeat");
+        o->shorthand           = 'r';
+        o->type                = G_OPTION_ARG_DOUBLE;
+        o->cli_description     = rsString("specify TR of data");
+        o->cli_arg_description = rsString("<rate in s>");
+        rsUIAddOption(interface, o);
+    }
     
     o = rsUINewOption();
     o->name                = rsString("direction");
@@ -98,7 +108,7 @@ rsUIInterface* SliceTiming::createUI()
     o->type                = G_OPTION_ARG_CALLBACK;
     o->cli_description     = rsString("direction of slice acquisition");
     o->cli_arg_description = rsString("<order>");
-    o->defaultValue        = rsString("bottom-up");
+    o->defaultValue        = rsString("z");
     rsUIOptionValue allowedValues2[] = {
       {rsString("x"),  rsString("acquisition in x-direction")},
       {rsString("y"),  rsString("acquisition in y-direction")},
@@ -108,11 +118,13 @@ rsUIInterface* SliceTiming::createUI()
     rsUISetOptionValues(o, allowedValues2);
     rsUIAddOption(interface, o);
     
-    o = rsUINewOption();
-    o->name                = rsString("odd");
-    o->shorthand           = 'o';
-    o->cli_description     = rsString("use interleaved acquisition");
-    rsUIAddOption(interface, o);
+    if ( ! multibandActive ) { 
+        o = rsUINewOption();
+        o->name                = rsString("odd");
+        o->shorthand           = 'o';
+        o->cli_description     = rsString("use interleaved acquisition");
+        rsUIAddOption(interface, o);
+    }
     
     return interface;
 }
@@ -131,6 +143,11 @@ void SliceTiming::printCallString(FILE *stream)
     
     fprintf(stream, "Cmd:\n%s\n", getSliceTimingTask()->getCmd());
     fprintf(stream, "\n");
+}
+
+void SliceTiming::setMultibandActive(bool mbActive)
+{
+    this->multibandActive = mbActive;
 }
 
 }}}}} // namespace rstools::batch::plugins::slicetiming::tool
