@@ -1,0 +1,9 @@
+*
+!*.c
+!*.cc
+!*.cpp
+!*.h
+!*.hpp
+!Makefile.am
+!plugins
+!.gitignore

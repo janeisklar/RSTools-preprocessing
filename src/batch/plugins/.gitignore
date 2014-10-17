@@ -1,0 +1,9 @@
+*
+!*.c
+!*.cpp
+!*.h
+!*.hpp
+!slicetiming
+!.gitignore
+!*.am
+
