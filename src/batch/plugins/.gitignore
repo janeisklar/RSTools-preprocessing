@@ -9,6 +9,7 @@
 !realignment
 !reorientation
 !normalization
+!smoothing
 !.gitignore
 !*.am
 

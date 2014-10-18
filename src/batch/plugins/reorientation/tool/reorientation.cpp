@@ -59,7 +59,7 @@ rsUIInterface* Reorientation::createUI()
     o->name                = rsString("input");
     o->shorthand           = 'i';
     o->type                = G_OPTION_ARG_FILENAME;
-    o->cli_description     = rsString("path to the dataset which is to be de-spiked");
+    o->cli_description     = rsString("path to the dataset which is to be reoriented");
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
     
@@ -67,7 +67,7 @@ rsUIInterface* Reorientation::createUI()
     o->name                = rsString("output");
     o->shorthand           = 'o';
     o->type                = G_OPTION_ARG_FILENAME;
-    o->cli_description     = rsString("path of the resulting de-spiked dataset");
+    o->cli_description     = rsString("path to the resulting reoriented dataset");
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
     
