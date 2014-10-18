@@ -3,13 +3,14 @@ AUTOMAKE_OPTIONS = subdir-objects
 AM_CFLAGS = -DDATA_PATH=\"$(datadir)\" -I$(top_srcdir)/src
 AM_CPPFLAGS = -DDATA_PATH=\"$(datadir)\" -I$(top_srcdir)/src
 
-lib_LTLIBRARIES =              \
-	libSliceTimingPlugin.la    \
-	libDespikingPlugin.la      \
-	libBFCorrectionPlugin.la   \
-	libRealignmentPlugin.la    \
-	libReorientationPlugin.la  \
-	libSmoothingPlugin.la
+lib_LTLIBRARIES =                    \
+	libSliceTimingPlugin.la          \
+	libDespikingPlugin.la            \
+	libBFCorrectionPlugin.la         \
+	libRealignmentPlugin.la          \
+	libReorientationPlugin.la        \
+	libSmoothingPlugin.la            \
+	libDistortionCorrectionPlugin.la
 
 libSliceTimingPlugin_la_SOURCES = slicetiming/task/mbslicetiming.cpp slicetiming/task/slicetiming.cpp slicetiming/tool/slicetiming.cpp slicetiming/slicetiming.cpp
 libSliceTimingPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
@@ -35,14 +36,19 @@ libSmoothingPlugin_la_SOURCES = smoothing/task/smoothing.cpp smoothing/tool/smoo
 libSmoothingPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libSmoothingPlugin_la_LDFLAGS = -module -export-dynamic
 
+libDistortionCorrectionPlugin_la_SOURCES = distcorrection/task/distcorrection.cpp distcorrection/tool/distcorrection.cpp distcorrection/distcorrection.cpp
+libDistortionCorrectionPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
+libDistortionCorrectionPlugin_la_LDFLAGS = -module -export-dynamic
+
 pluginsdir = $(datadir)/rstools/plugins
-plugins_DATA =                       \
-	.libs/libSliceTimingPlugin.so    \
-	.libs/libDespikingPlugin.so      \
-	.libs/libBFCorrectionPlugin.so   \
-	.libs/libRealignmentPlugin.so    \
-	.libs/libReorientationPlugin.so  \
-	.libs/libSmoothingPlugin.so
+plugins_DATA =                             \
+	.libs/libSliceTimingPlugin.so          \
+	.libs/libDespikingPlugin.so            \
+	.libs/libBFCorrectionPlugin.so         \
+	.libs/libRealignmentPlugin.so          \
+	.libs/libReorientationPlugin.so        \
+	.libs/libSmoothingPlugin.so            \
+	.libs/libDistortionCorrectionPlugin.so
 
 jobpluginsdir = $(datadir)/$(PACKAGE)/jobs/plugins
 jobplugins_DATA =                                     \
@@ -52,4 +58,5 @@ jobplugins_DATA =                                     \
 	../../../share/jobs/plugins/bfcorrection.xsdext   \
 	../../../share/jobs/plugins/realignment.xsdext    \
 	../../../share/jobs/plugins/reorientation.xsdext  \
-	../../../share/jobs/plugins/smoothing.xsdext
+	../../../share/jobs/plugins/smoothing.xsdext      \
+	../../../share/jobs/plugins/distcorrection.xsdext

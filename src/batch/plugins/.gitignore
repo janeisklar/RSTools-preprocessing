@@ -10,6 +10,7 @@
 !reorientation
 !normalization
 !smoothing
+!distcorrection
 !.gitignore
 !*.am
 
