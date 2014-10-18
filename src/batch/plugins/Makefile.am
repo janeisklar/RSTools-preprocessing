@@ -7,7 +7,8 @@ lib_LTLIBRARIES =              \
 	libSliceTimingPlugin.la    \
 	libDespikingPlugin.la      \
 	libBFCorrectionPlugin.la   \
-	libRealignmentPlugin.la
+	libRealignmentPlugin.la    \
+	libReorientationPlugin.la
 
 libSliceTimingPlugin_la_SOURCES = slicetiming/task/mbslicetiming.cpp slicetiming/task/slicetiming.cpp slicetiming/tool/slicetiming.cpp slicetiming/slicetiming.cpp
 libSliceTimingPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
@@ -25,12 +26,17 @@ libRealignmentPlugin_la_SOURCES = realignment/task/realignment.cpp realignment/t
 libRealignmentPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libRealignmentPlugin_la_LDFLAGS = -module -export-dynamic
 
+libReorientationPlugin_la_SOURCES = reorientation/task/reorientation.cpp reorientation/tool/reorientation.cpp reorientation/reorientation.cpp
+libReorientationPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
+libReorientationPlugin_la_LDFLAGS = -module -export-dynamic
+
 pluginsdir = $(datadir)/rstools/plugins
-plugins_DATA = \
-	.libs/libSliceTimingPlugin.so   \
-	.libs/libDespikingPlugin.so     \
-	.libs/libBFCorrectionPlugin.so  \
-	.libs/libRealignmentPlugin.so
+plugins_DATA =                       \
+	.libs/libSliceTimingPlugin.so    \
+	.libs/libDespikingPlugin.so      \
+	.libs/libBFCorrectionPlugin.so   \
+	.libs/libRealignmentPlugin.so    \
+	.libs/libReorientationPlugin.so
 
 jobpluginsdir = $(datadir)/$(PACKAGE)/jobs/plugins
 jobplugins_DATA =                                     \
@@ -38,4 +44,5 @@ jobplugins_DATA =                                     \
 	../../../share/jobs/plugins/mbslicetiming.xsdext  \
 	../../../share/jobs/plugins/despiking.xsdext      \
 	../../../share/jobs/plugins/bfcorrection.xsdext   \
-	../../../share/jobs/plugins/realignment.xsdext
+	../../../share/jobs/plugins/realignment.xsdext    \
+	../../../share/jobs/plugins/reorientation.xsdext
