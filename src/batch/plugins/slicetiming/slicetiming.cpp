@@ -25,6 +25,7 @@ rsToolRegistration* SliceTiming::createSliceTimingToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Temporal";
     toolRegistration->createTool = (rsToolToolCreator)SliceTiming::createSliceTimingTool;
     toolRegistration->createTask = (rsToolTaskCreator)SliceTiming::createSliceTimingTask;
     return toolRegistration;
@@ -44,6 +45,7 @@ rsToolRegistration* SliceTiming::createMBSliceTimingToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = "Slice Timing (Multiband)";
     toolRegistration->code       = "mbslicetiming";
+    toolRegistration->category   = "Temporal";
     toolRegistration->createTool = (rsToolToolCreator)SliceTiming::createMBSliceTimingTool;
     toolRegistration->createTask = (rsToolTaskCreator)SliceTiming::createMBSliceTimingTask;
     return toolRegistration;

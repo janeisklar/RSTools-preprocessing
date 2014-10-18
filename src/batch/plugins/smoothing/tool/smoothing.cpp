@@ -53,7 +53,7 @@ rsUIInterface* Smoothing::createUI()
 {    
     rsUIOption *o;
     rsUIInterface* interface = rsUINewInterface();
-    interface->description   = rsString("Smoothing (FSL's susan or fslmaths)");
+    interface->description   = rsString("Smoothing (FSL's susan/fslmaths)");
     
     o = rsUINewOption();
     o->name                = rsString("input");
@@ -85,7 +85,7 @@ rsUIInterface* Smoothing::createUI()
     };
     rsUISetOptionValues(o, allowedValues2);
     rsUIAddOption(interface, o);
-        
+    
     o = rsUINewOption();
     o->name                = rsString("kernelSize");
     o->shorthand           = 'k';

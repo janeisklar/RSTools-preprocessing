@@ -21,6 +21,7 @@ rsToolRegistration* Smoothing::createSmoothingToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Spatial";
     toolRegistration->createTool = (rsToolToolCreator)Smoothing::createSmoothingTool;
     toolRegistration->createTask = (rsToolTaskCreator)Smoothing::createSmoothingTask;
     return toolRegistration;

@@ -21,6 +21,7 @@ rsToolRegistration* Despiking::createDespikingToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Artifacts / Motion";
     toolRegistration->createTool = (rsToolToolCreator)Despiking::createDespikingTool;
     toolRegistration->createTask = (rsToolTaskCreator)Despiking::createDespikingTask;
     return toolRegistration;

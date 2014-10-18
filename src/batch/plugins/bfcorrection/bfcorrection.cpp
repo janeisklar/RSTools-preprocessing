@@ -21,6 +21,7 @@ rsToolRegistration* BFCorrection::createBFCorrectionToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Artifacts / Motion";
     toolRegistration->createTool = (rsToolToolCreator)BFCorrection::createBFCorrectionTool;
     toolRegistration->createTask = (rsToolTaskCreator)BFCorrection::createBFCorrectionTask;
     return toolRegistration;

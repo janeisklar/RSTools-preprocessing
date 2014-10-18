@@ -21,6 +21,7 @@ rsToolRegistration* Reorientation::createReorientationToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Util";
     toolRegistration->createTool = (rsToolToolCreator)Reorientation::createReorientationTool;
     toolRegistration->createTask = (rsToolTaskCreator)Reorientation::createReorientationTask;
     return toolRegistration;

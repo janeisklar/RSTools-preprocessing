@@ -21,6 +21,7 @@ rsToolRegistration* Realignment::createRealignmentToolRegistration()
     rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
     toolRegistration->name       = getName();
     toolRegistration->code       = getCode();
+    toolRegistration->category   = "Artifacts / Motion";
     toolRegistration->createTool = (rsToolToolCreator)Realignment::createRealignmentTool;
     toolRegistration->createTask = (rsToolTaskCreator)Realignment::createRealignmentTask;
     return toolRegistration;
