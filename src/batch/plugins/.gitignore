@@ -5,6 +5,9 @@
 !*.hpp
 !slicetiming
 !despiking
+!bfcorrection
+!realignment
+!normalization
 !.gitignore
 !*.am
 

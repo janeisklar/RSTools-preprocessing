@@ -1,0 +1,7 @@
+<xs:complexType name="bfcorrection">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for bfcorrection -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>
