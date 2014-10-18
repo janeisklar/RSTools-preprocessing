@@ -11,6 +11,7 @@
 !normalization
 !smoothing
 !distcorrection
+!regressors
 !.gitignore
 !*.am
 

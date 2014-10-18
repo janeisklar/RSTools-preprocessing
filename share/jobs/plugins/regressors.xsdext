@@ -1,0 +1,7 @@
+<xs:complexType name="regressors">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for regressors -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>
