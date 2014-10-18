@@ -1,0 +1,7 @@
+<xs:complexType name="realignment">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for realignment -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>
