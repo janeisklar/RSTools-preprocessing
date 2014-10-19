@@ -1,0 +1,7 @@
+<xs:complexType name="transformation">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for transformation -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>

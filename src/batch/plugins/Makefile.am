@@ -12,7 +12,8 @@ lib_LTLIBRARIES =                    \
 	libSmoothingPlugin.la            \
 	libDistortionCorrectionPlugin.la \
 	libMergeRegressorsPlugin.la      \
-	libNormalizationPlugin.la
+	libNormalizationPlugin.la        \
+	libTransformationPlugin.la
 
 libSliceTimingPlugin_la_SOURCES = slicetiming/task/mbslicetiming.cpp slicetiming/task/slicetiming.cpp slicetiming/tool/slicetiming.cpp slicetiming/slicetiming.cpp
 libSliceTimingPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
@@ -50,6 +51,10 @@ libNormalizationPlugin_la_SOURCES = normalization/task/normalization.cpp normali
 libNormalizationPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libNormalizationPlugin_la_LDFLAGS = -module -export-dynamic
 
+libTransformationPlugin_la_SOURCES = transformation/task/transformation.cpp transformation/tool/transformation.cpp transformation/transformation.cpp
+libTransformationPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
+libTransformationPlugin_la_LDFLAGS = -module -export-dynamic
+
 pluginsdir = $(datadir)/rstools/plugins
 plugins_DATA =                             \
 	.libs/libSliceTimingPlugin.so          \
@@ -60,7 +65,8 @@ plugins_DATA =                             \
 	.libs/libSmoothingPlugin.so            \
 	.libs/libDistortionCorrectionPlugin.so \
 	.libs/libMergeRegressorsPlugin.so      \
-	.libs/libNormalizationPlugin.so
+	.libs/libNormalizationPlugin.so        \
+	.libs/libTransformationPlugin.so
 
 jobpluginsdir = $(datadir)/$(PACKAGE)/jobs/plugins
 jobplugins_DATA =                                     \
@@ -73,4 +79,5 @@ jobplugins_DATA =                                     \
 	../../../share/jobs/plugins/smoothing.xsdext      \
 	../../../share/jobs/plugins/distcorrection.xsdext \
 	../../../share/jobs/plugins/regressors.xsdext     \
-	../../../share/jobs/plugins/normalization.xsdext
+	../../../share/jobs/plugins/normalization.xsdext  \
+	../../../share/jobs/plugins/transformation.xsdext
