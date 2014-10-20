@@ -1,6 +1,5 @@
 #include "transformation.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace transformation {
 namespace tool {
-    
-void Transformation::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void Transformation::_init()
 {
@@ -45,21 +39,6 @@ void Transformation::_init()
 
 void Transformation::destroy()
 {}
-
-bool Transformation::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::transformation::task::Transformation* Transformation::getTransformationTask()
-{
-    return (rstools::batch::plugins::transformation::task::Transformation*)this->getTask();
-}
-
-void Transformation::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getTransformationTask()->getCmd());
-}
 
 rsUIInterface* Transformation::createUI()
 {    
@@ -170,22 +149,6 @@ rsUIInterface* Transformation::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Transformation::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getTransformationTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::transformation::tool

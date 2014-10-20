@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_realignment_task_realignment_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace realignment {
 namespace task {
     
-class Realignment : public RSTask {
+class Realignment : public RSUnixTask {
 
 public: 
     Realignment(const char* code, const char* name);

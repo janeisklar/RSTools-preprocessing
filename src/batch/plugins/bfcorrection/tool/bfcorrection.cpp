@@ -1,6 +1,5 @@
 #include "bfcorrection.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace bfcorrection {
 namespace tool {
-    
-void BFCorrection::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void BFCorrection::_init()
 {
@@ -39,21 +33,6 @@ void BFCorrection::_init()
 
 void BFCorrection::destroy()
 {}
-
-bool BFCorrection::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::bfcorrection::task::BFCorrection* BFCorrection::getBFCorrectionTask()
-{
-    return (rstools::batch::plugins::bfcorrection::task::BFCorrection*)this->getTask();
-}
-
-void BFCorrection::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getBFCorrectionTask()->getCmd());
-}
 
 rsUIInterface* BFCorrection::createUI()
 {    
@@ -103,22 +82,6 @@ rsUIInterface* BFCorrection::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void BFCorrection::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getBFCorrectionTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::bfcorrection::tool

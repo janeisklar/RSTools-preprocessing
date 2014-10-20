@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "batch/util/rstool.hpp"
+#include "batch/util/rsunixtool.hpp"
 #include "../task/smoothing.hpp"
 
 using namespace rstools::batch::util;
@@ -15,22 +15,14 @@ namespace plugins {
 namespace smoothing {
 namespace tool {
     
-class Smoothing : public RSTool {
+class Smoothing : public RSUnixTool {
 
 public:
     void destroy();
-    bool isEverythingFine();
     rsUIInterface* createUI();
-    void printCallString(FILE *stream);
     
 protected:
-    void _parseParams(int argc, char * argv[]);
     void _init();
-    virtual void _run();
-    
-    rstools::batch::plugins::smoothing::task::Smoothing* getSmoothingTask();
-    
-    bool executionSuccessful;
     
 };
 

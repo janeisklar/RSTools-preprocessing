@@ -9,7 +9,7 @@ namespace plugins {
 namespace transformation {
 namespace task {
    
-Transformation::Transformation(const char* code, const char* name) : RSTask(code, name)
+Transformation::Transformation(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Transformation::getCmd() {

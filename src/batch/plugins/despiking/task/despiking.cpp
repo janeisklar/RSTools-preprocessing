@@ -8,7 +8,7 @@ namespace plugins {
 namespace despiking {
 namespace task {
    
-Despiking::Despiking(const char* code, const char* name) : RSTask(code, name)
+Despiking::Despiking(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Despiking::getCmd() {

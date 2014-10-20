@@ -1,6 +1,5 @@
 #include "distcorrection.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace distcorrection {
 namespace tool {
-    
-void Distcorrection::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void Distcorrection::_init()
 {
@@ -39,21 +33,6 @@ void Distcorrection::_init()
 
 void Distcorrection::destroy()
 {}
-
-bool Distcorrection::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::distcorrection::task::Distcorrection* Distcorrection::getDistcorrectionTask()
-{
-    return (rstools::batch::plugins::distcorrection::task::Distcorrection*)this->getTask();
-}
-
-void Distcorrection::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getDistcorrectionTask()->getCmd());
-}
 
 rsUIInterface* Distcorrection::createUI()
 {    
@@ -94,22 +73,6 @@ rsUIInterface* Distcorrection::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Distcorrection::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getDistcorrectionTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::distcorrection::tool

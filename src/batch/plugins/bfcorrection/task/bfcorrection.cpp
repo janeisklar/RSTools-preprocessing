@@ -8,7 +8,7 @@ namespace plugins {
 namespace bfcorrection {
 namespace task {
    
-BFCorrection::BFCorrection(const char* code, const char* name) : RSTask(code, name)
+BFCorrection::BFCorrection(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* BFCorrection::getCmd() {

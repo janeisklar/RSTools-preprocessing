@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "batch/util/rstool.hpp"
+#include "batch/util/rsunixtool.hpp"
 #include "../task/slicetiming.hpp"
 
 using namespace rstools::batch::util;
@@ -15,25 +15,16 @@ namespace plugins {
 namespace slicetiming {
 namespace tool {
     
-class SliceTiming : public RSTool {
+class SliceTiming : public RSUnixTool {
 
 public:
     void destroy();
-    bool isEverythingFine();
     rsUIInterface* createUI();
-    void printCallString(FILE *stream);
     void setMultibandActive(bool mbActive);
     
 protected:
-    void _parseParams(int argc, char * argv[]);
     void _init();
-    virtual void _run();
     bool multibandActive;
-    
-    rstools::batch::plugins::slicetiming::task::SliceTiming* getSliceTimingTask();
-    
-    bool executionSuccessful;
-    
 };
 
 }}}}} // namespace rstools::batch::plugins::unix::tool

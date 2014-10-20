@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_regressors_task_regressors_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace regressors {
 namespace task {
     
-class Regressors : public RSTask {
+class Regressors : public RSUnixTask {
 
 public: 
     Regressors(const char* code, const char* name);

@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_slicetiming_task_slicetiming_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace slicetiming {
 namespace task {
     
-class SliceTiming : public RSTask {
+class SliceTiming : public RSUnixTask {
 
 public: 
     SliceTiming(const char* code, const char* name);

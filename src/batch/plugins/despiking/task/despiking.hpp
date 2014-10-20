@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_despiking_task_despiking_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace despiking {
 namespace task {
     
-class Despiking : public RSTask {
+class Despiking : public RSUnixTask {
 
 public: 
     Despiking(const char* code, const char* name);

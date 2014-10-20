@@ -1,6 +1,5 @@
 #include "realignment.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace realignment {
 namespace tool {
-    
-void Realignment::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void Realignment::_init()
 {
@@ -33,21 +27,6 @@ void Realignment::_init()
 
 void Realignment::destroy()
 {}
-
-bool Realignment::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::realignment::task::Realignment* Realignment::getRealignmentTask()
-{
-    return (rstools::batch::plugins::realignment::task::Realignment*)this->getTask();
-}
-
-void Realignment::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getRealignmentTask()->getCmd());
-}
 
 rsUIInterface* Realignment::createUI()
 {    
@@ -81,22 +60,6 @@ rsUIInterface* Realignment::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Realignment::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getRealignmentTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::realignment::tool

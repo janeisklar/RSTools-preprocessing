@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_transformation_task_transformation_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace transformation {
 namespace task {
     
-class Transformation : public RSTask {
+class Transformation : public RSUnixTask {
 
 public: 
     Transformation(const char* code, const char* name);

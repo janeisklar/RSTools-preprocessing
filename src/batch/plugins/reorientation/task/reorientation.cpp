@@ -8,7 +8,7 @@ namespace plugins {
 namespace reorientation {
 namespace task {
    
-Reorientation::Reorientation(const char* code, const char* name) : RSTask(code, name)
+Reorientation::Reorientation(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Reorientation::getCmd() {

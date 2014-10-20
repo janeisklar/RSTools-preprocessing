@@ -8,7 +8,7 @@ namespace plugins {
 namespace distcorrection {
 namespace task {
    
-Distcorrection::Distcorrection(const char* code, const char* name) : RSTask(code, name)
+Distcorrection::Distcorrection(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Distcorrection::getCmd() {

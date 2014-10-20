@@ -10,33 +10,40 @@ namespace plugins {
 namespace slicetiming {
 namespace tool {
     
-void SliceTiming::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
-    
 void SliceTiming::_init()
 {
-    setMultibandActive(false);
+    rsArgument *input = this->getTask()->getArgument("in");
+    rsArgument *output = this->getTask()->getArgument("out");
+    
+    if ( input == NULL ) {
+        fprintf(stderr, "An input needs to be specified!\n");
+        this->executionSuccessful = false;
+    }
+    
+    if ( output == NULL ) {
+        fprintf(stderr, "An output needs to be specified!\n");
+        this->executionSuccessful = false;
+    }
+    
+    if ( this->multibandActive ) {
+        rsArgument *tcustom = this->getTask()->getArgument("tcustom");
+        
+        if ( tcustom == NULL ) {
+            fprintf(stderr, "A file containing the slice shifts (tcustom) needs to be specified!\n");
+            this->executionSuccessful = false;
+        }
+    } else {
+        rsArgument *repeat = this->getTask()->getArgument("repeat");
+        
+        if ( repeat == NULL ) {
+            fprintf(stderr, "The TR needs to be specified!\n");
+            this->executionSuccessful = false;
+        }
+    }
 }
 
 void SliceTiming::destroy()
 {}
-
-bool SliceTiming::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::slicetiming::task::SliceTiming* SliceTiming::getSliceTimingTask()
-{
-    return (rstools::batch::plugins::slicetiming::task::SliceTiming*)this->getTask();
-}
-
-void SliceTiming::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getSliceTimingTask()->getCmd());
-}
 
 rsUIInterface* SliceTiming::createUI()
 {    
@@ -127,22 +134,6 @@ rsUIInterface* SliceTiming::createUI()
     }
     
     return interface;
-}
-
-void SliceTiming::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getSliceTimingTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 void SliceTiming::setMultibandActive(bool mbActive)

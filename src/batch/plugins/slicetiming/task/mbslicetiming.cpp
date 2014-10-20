@@ -8,59 +8,43 @@ namespace plugins {
 namespace slicetiming {
 namespace task {
    
-MBSliceTiming::MBSliceTiming(const char* code, const char* name) : RSTask(code, name)
-{
-}
+MBSliceTiming::MBSliceTiming(const char* code, const char* name) : RSUnixTask(code, name)
+{}
 
 char* MBSliceTiming::getCmd() {
     
-    char *fslPath = this->getJob()->getArgument("fslPath")->value;
-    char *cmd = rsStringConcat(fslPath, "/slicetimer", NULL);
-    char *mean = NULL;
-    char *in;
-    char *out;
+    const char *input        = this->getArgument("in")->value;
+    const char *output       = this->getArgument("out")->value;
+    const char *tcustom      = this->getArgument("tcustom")->value;
+    rsArgument *meanArg      = this->getArgument("mean");
+    rsArgument *directionArg = this->getArgument("direction");
     
-    // prepare the call for the slicetimer
-    for ( vector<rsArgument*>::size_type j = 0; j != arguments.size(); j++ ) {
-        rsArgument *arg = arguments[j];
-                
-        char *oldCmd = cmd;
-        char *newCmd = NULL;
-        
-        if ( ! strcmp(arg->key, "in") ) {
-            newCmd = rsStringConcat(" --in=", arg->value, NULL);
-            in = arg->value;
-        } else if ( !strcmp(arg->key, "out") ) {
-            newCmd = rsStringConcat(" --out=", arg->value, NULL);
-            out = arg->value;
-        } else if ( !strcmp(arg->key, "tcustom") ) {
-            newCmd = rsStringConcat(" --tcustom=", arg->value, NULL);
-        } else if ( !strcmp(arg->key, "mean") ) {
-            newCmd = rsString("");
-            mean = arg->value;
-        } else if ( !strcmp(arg->key, "direction") ) {
-            if ( !strcmp(arg->value, "x") ) {
-                newCmd = rsString(" --direction=1");
-            } else if ( !strcmp(arg->value, "y") ) {
-                newCmd = rsString(" --direction=2");
-            } else {
-                newCmd = rsString(" --direction=3");
-            }
-        } else {
-            fprintf(stderr, "Option '%s' is an unknown argument for the slicetiming-tool\n", arg->key);
-            newCmd = rsString("");
-        }
-        
-        cmd = rsStringConcat(cmd, newCmd, NULL);
-        
-        rsFree(newCmd);
-        rsFree(oldCmd);
-    }
+    char *fslPath = this->getJob()->getArgument("fslPath")->value;
+    
+    const char *mean      = (meanArg == NULL)
+                            ? NULL
+                            : meanArg->value;
+    
+    const char *direction = (directionArg==NULL || !strcmp(directionArg->value, "z"))
+                            ? "3"
+                            : (!strcmp(directionArg->value, "x") ? "1" : "2");
+    
+    // prepare the call for the slicetimer    
+    char *cmd = rsStringConcat(
+        fslPath, "/slicetimer --in=", input, " --out=", output, " --tcustom=", tcustom, " --direction=", direction,
+        NULL
+    );
+    
     
     // prepare the computation of the mean
     if ( mean != NULL ) {
         char *oldCmd = cmd;
-        cmd = rsStringConcat(cmd, "\n", fslPath, "/fslmaths ", in, " -Tmean ", out, NULL);
+        cmd = rsStringConcat(
+            cmd,
+            "\n",
+            fslPath, "/fslmaths ", output, " -Tmean ", mean,
+            NULL
+        );
         rsFree(oldCmd);
     }
     

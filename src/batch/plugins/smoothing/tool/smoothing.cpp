@@ -1,6 +1,5 @@
 #include "smoothing.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,12 +8,7 @@ namespace batch {
 namespace plugins {
 namespace smoothing {
 namespace tool {
-    
-void Smoothing::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
-    
+
 void Smoothing::_init()
 {
     rsArgument *input = this->getTask()->getArgument("input");
@@ -33,21 +27,6 @@ void Smoothing::_init()
 
 void Smoothing::destroy()
 {}
-
-bool Smoothing::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::smoothing::task::Smoothing* Smoothing::getSmoothingTask()
-{
-    return (rstools::batch::plugins::smoothing::task::Smoothing*)this->getTask();
-}
-
-void Smoothing::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getSmoothingTask()->getCmd());
-}
 
 rsUIInterface* Smoothing::createUI()
 {    
@@ -105,22 +84,6 @@ rsUIInterface* Smoothing::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Smoothing::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getSmoothingTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::smoothing::tool

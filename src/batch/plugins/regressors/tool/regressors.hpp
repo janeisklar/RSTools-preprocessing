@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "batch/util/rstool.hpp"
+#include "batch/util/rsunixtool.hpp"
 #include "../task/regressors.hpp"
 
 using namespace rstools::batch::util;
@@ -15,23 +15,14 @@ namespace plugins {
 namespace regressors {
 namespace tool {
     
-class Regressors : public RSTool {
+class Regressors : public RSUnixTool {
 
 public:
     void destroy();
-    bool isEverythingFine();
     rsUIInterface* createUI();
-    void printCallString(FILE *stream);
     
 protected:
-    void _parseParams(int argc, char * argv[]);
     void _init();
-    virtual void _run();
-    
-    rstools::batch::plugins::regressors::task::Regressors* getRegressorsTask();
-    
-    bool executionSuccessful;
-    
 };
 
 }}}}} // namespace rstools::batch::plugins::regressors::tool

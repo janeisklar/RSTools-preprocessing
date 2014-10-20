@@ -1,6 +1,5 @@
 #include "reorientation.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace reorientation {
 namespace tool {
-    
-void Reorientation::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void Reorientation::_init()
 {
@@ -33,21 +27,6 @@ void Reorientation::_init()
 
 void Reorientation::destroy()
 {}
-
-bool Reorientation::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::reorientation::task::Reorientation* Reorientation::getReorientationTask()
-{
-    return (rstools::batch::plugins::reorientation::task::Reorientation*)this->getTask();
-}
-
-void Reorientation::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getReorientationTask()->getCmd());
-}
 
 rsUIInterface* Reorientation::createUI()
 {    
@@ -81,22 +60,6 @@ rsUIInterface* Reorientation::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Reorientation::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getReorientationTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::reorientation::tool

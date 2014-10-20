@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_bfcorrection_task_bfcorrection_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace bfcorrection {
 namespace task {
     
-class BFCorrection : public RSTask {
+class BFCorrection : public RSUnixTask {
 
 public: 
     BFCorrection(const char* code, const char* name);

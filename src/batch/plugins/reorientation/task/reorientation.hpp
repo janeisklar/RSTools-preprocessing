@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_reorientation_task_reorientation_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace reorientation {
 namespace task {
     
-class Reorientation : public RSTask {
+class Reorientation : public RSUnixTask {
 
 public: 
     Reorientation(const char* code, const char* name);

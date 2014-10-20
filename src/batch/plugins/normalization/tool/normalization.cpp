@@ -1,6 +1,5 @@
 #include "normalization.hpp"
 #include "utils/rsstring.h"
-#include "batch/util/rsunix.hpp"
 
 using namespace rstools::batch::util;
 
@@ -9,11 +8,6 @@ namespace batch {
 namespace plugins {
 namespace normalization {
 namespace tool {
-    
-void Normalization::_parseParams(int argc, char * argv[])
-{   
-    this->executionSuccessful = true;
-}
     
 void Normalization::_init()
 {
@@ -27,21 +21,6 @@ void Normalization::_init()
 
 void Normalization::destroy()
 {}
-
-bool Normalization::isEverythingFine()
-{
-    return this->executionSuccessful;
-}
-
-rstools::batch::plugins::normalization::task::Normalization* Normalization::getNormalizationTask()
-{
-    return (rstools::batch::plugins::normalization::task::Normalization*)this->getTask();
-}
-
-void Normalization::_run()
-{
-    this->executionSuccessful = rsExecuteUnixCommand(this->getNormalizationTask()->getCmd());
-}
 
 rsUIInterface* Normalization::createUI()
 {    
@@ -156,22 +135,6 @@ rsUIInterface* Normalization::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
-}
-
-void Normalization::printCallString(FILE *stream)
-{
-    int argc;
-    char **argv = getCallString(&argc);
-
-    fprintf(stream, "Tool:\n %s\n\nParams:\n", getTask()->getName());
-    for ( int i=1; i<argc; i++ ) {
-        fprintf(stream, "  %s\n", argv[i]);
-    }
-    
-    fprintf(stream, "\n");
-    
-    fprintf(stream, "Cmd:\n%s\n", getNormalizationTask()->getCmd());
-    fprintf(stream, "\n");
 }
 
 }}}}} // namespace rstools::batch::plugins::normalization::tool

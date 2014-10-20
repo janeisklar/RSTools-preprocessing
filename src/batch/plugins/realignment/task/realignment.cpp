@@ -8,7 +8,7 @@ namespace plugins {
 namespace realignment {
 namespace task {
    
-Realignment::Realignment(const char* code, const char* name) : RSTask(code, name)
+Realignment::Realignment(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Realignment::getCmd() {

@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_normalization_task_normalization_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace normalization {
 namespace task {
     
-class Normalization : public RSTask {
+class Normalization : public RSUnixTask {
 
 public: 
     Normalization(const char* code, const char* name);

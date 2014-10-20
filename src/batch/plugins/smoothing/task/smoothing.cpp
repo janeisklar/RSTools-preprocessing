@@ -9,7 +9,7 @@ namespace plugins {
 namespace smoothing {
 namespace task {
    
-Smoothing::Smoothing(const char* code, const char* name) : RSTask(code, name)
+Smoothing::Smoothing(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
 char* Smoothing::getCmd() {

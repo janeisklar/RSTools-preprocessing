@@ -2,7 +2,7 @@
 #define rstools_rsbatch_plugin_distcorrection_task_distcorrection_h
 
 #include <iostream>
-#include "batch/util/rstask.hpp"
+#include "batch/util/rsunixtask.hpp"
 
 using namespace rstools::batch::util;
 
@@ -12,7 +12,7 @@ namespace plugins {
 namespace distcorrection {
 namespace task {
     
-class Distcorrection : public RSTask {
+class Distcorrection : public RSUnixTask {
 
 public: 
     Distcorrection(const char* code, const char* name);
