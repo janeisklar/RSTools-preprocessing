@@ -97,7 +97,7 @@ char* Normalization::getCmd() {
         "fslmaths ", input->value, " -Tmean ", meanCmd, "\n",
         "\n",
         "# perform registration\n",
-        ANTSPATH, "ANTS 3 -m ", metricCmd.c_str(), epiTemplate->value, ",", input->value, ",", meanCmd, " -t ", transformationCmd.c_str(), " -r ", regularizationionCmd.c_str(), " -o $tmpdir/tpl -i ", maxIterationsCmd, " --use-Histogram-Matching --number-of-affine-iterations ", maxAffineIterationsCmd, " --MI-option 32x16000\n",
+        ANTSPATH, "ANTS 3 -m ", metricCmd.c_str(), epiTemplate->value, ",", meanCmd, ",", metricParamCmd.c_str(), " -t ", transformationCmd.c_str(), " -r ", regularizationionCmd.c_str(), " -o $tmpdir/tpl -i ", maxIterationsCmd, " --use-Histogram-Matching --number-of-affine-iterations ", maxAffineIterationsCmd, " --MI-option 32x16000\n",
         "\n",
         "# save resulting transformation parameters\n",
         "cp $tmpdir/tplWarp.nii.gz ", epi2EpiTemplateWarp->value, "\n",
