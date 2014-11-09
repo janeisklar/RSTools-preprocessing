@@ -45,6 +45,12 @@ rsUIInterface* Normalization::createUI()
     rsUIAddOption(interface, o);
     
     o = rsUINewOption();
+    o->name                = rsString("stripskull");
+    o->shorthand           = 's';
+    o->cli_description     = rsString("strip skull from the volume and let it \"float in CSF\" which helps the registration in estimating the CSF/GM boundaries");
+    rsUIAddOption(interface, o);
+    
+    o = rsUINewOption();
     o->name                = rsString("epiTemplate");
     o->type                = G_OPTION_ARG_FILENAME;
     o->group               = RS_UI_GROUP_EXTENDED;

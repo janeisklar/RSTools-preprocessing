@@ -81,3 +81,8 @@ jobplugins_DATA =                                     \
 	../../../share/jobs/plugins/regressors.xsdext     \
 	../../../share/jobs/plugins/normalization.xsdext  \
 	../../../share/jobs/plugins/transformation.xsdext
+
+
+utilsdir = $(datadir)/$(PACKAGE)/utils
+utils_DATA =                                     \
+        ../../../share/utils/logkernel_0.3.nii.gz

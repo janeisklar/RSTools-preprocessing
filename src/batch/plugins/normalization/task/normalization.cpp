@@ -1,4 +1,5 @@
 #include "normalization.hpp"
+#include "config.h"
 
 using namespace rstools::batch::util;
 
@@ -16,17 +17,23 @@ char* Normalization::getCmd() {
     // acquire parameters
     rsArgument *input                  = this->getArgument("input");
     rsArgument *mean                   = this->getArgument("mean");
-    rsArgument *epiTemplate            = this->getArgument("epiTemplate");
-    rsArgument *epi2EpiTemplateWarp    = this->getArgument("epi2EpiTemplateWarp");
-    rsArgument *epi2EpiTemplateInvWarp = this->getArgument("epi2EpiTemplateInvWarp");
-    rsArgument *epi2EpiTemplateAffine  = this->getArgument("epi2EpiTemplateAffine");
+    const char *brainMask              = this->getDefaultArgumentValue("brainMask");
+    const char *epiTemplate            = this->getDefaultArgumentValue("epiTemplate");
+    const char *epiTemplateWarp        = this->getDefaultArgumentValue("epiTemplateWarp");
+    const char *epiTemplateInvWarp     = this->getDefaultArgumentValue("epiTemplateInvWarp");
+    const char *epiTemplateAffine      = this->getDefaultArgumentValue("epiTemplateAffine");
+    const char *epi2EpiTemplateWarp    = this->getDefaultArgumentValue("epi2EpiTemplateWarp");
+    const char *epi2EpiTemplateInvWarp = this->getDefaultArgumentValue("epi2EpiTemplateInvWarp");
+    const char *epi2EpiTemplateAffine  = this->getDefaultArgumentValue("epi2EpiTemplateAffine");
     rsArgument *transformationType     = this->getArgument("transformationType");
     rsArgument *similarityMetric       = this->getArgument("similarityMetric");
     rsArgument *maxIterations          = this->getArgument("maxIterations");
     rsArgument *maxAffineIterations    = this->getArgument("maxAffineIterations");
+    rsArgument *stripskull             = this->getArgument("stripskull");
         
-    const char *fslPath = this->getJob()->getArgument("fslPath")->value;
+    const char *fslPath  = this->getJob()->getArgument("fslPath")->value;
     const char *ANTSPATH = this->getJob()->getArgument("ANTSPATH")->value;
+    const char *afniPath = this->getJob()->getArgument("afniPath")->value;
     
     // determine transformation parameters
     string transformationTypeStr = (transformationType==NULL)
@@ -76,6 +83,7 @@ char* Normalization::getCmd() {
         metricParamCmd = "1,0]";
     }
     
+    
     // prepare values for the command
     const char *maxIterationsCmd       = (maxIterations==NULL)
                                          ? "30x90x20"
@@ -89,20 +97,61 @@ char* Normalization::getCmd() {
                                          ? "$tmpdir/mean.nii"
                                          : mean->value;
     
+    const char *logKernelPath =  DATA_PATH "/" PACKAGE "/utils/logkernel_0.3.nii.gz";
+    
+    string source = meanCmd;
+    string target = epiTemplate;
+    string stripskullCmd = "";
+    
+    if ( stripskull != NULL ) {
+        source = "$tmpdir/skullstripped_input.nii";
+        target = "$tmpdir/skullstripped_tpl.nii";
+        stripskullCmd = rsStringConcat(
+            "\n",
+            "# compute EPI template edges\n",
+            fslPath, "/fslmaths ", epiTemplate, " -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_tpl.nii\n",
+            "\n",
+            "# compute EPI edges\n",
+            afniPath, "/3dZeropad -prefix $tmpdir/padded_input.nii -I 5 -S 5 -A 5 -P 5 -L 5 -R 5 ", meanCmd, "\n",
+            fslPath, "/fslmaths $tmpdir/padded_input.nii -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_input.nii\n",
+            "\n",
+            "# register EPI edges to EPI template edges\n",
+            ANTSPATH, "ANTS 3 -m ", metricCmd.c_str(), "$tmpdir/edges_tpl.nii,$tmpdir/edges_input.nii,", metricParamCmd.c_str(), " -t ", transformationCmd.c_str(), " -r ", regularizationionCmd.c_str(), " -o $tmpdir/tpl -i ", maxIterationsCmd, " --use-Histogram-Matching --number-of-affine-iterations ", maxAffineIterationsCmd, " --MI-option 32x16000\n",
+            "\n",
+            "# warp brain mask\n",
+            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_tpl.nii -R $tmpdir/edges_tpl.nii -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
+            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_input.nii -R $tmpdir/edges_input.nii -i $tmpdir/tplAffine.txt $tmpdir/tplInverseWarp.nii.gz -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
+            "\n",
+            "# create epi template mask\n",
+            fslPath, "/fslmaths ", epiTemplate, " -mas $tmpdir/brainmask_tpl.nii $tmpdir/brainmasked_tpl.nii\n",
+            "csfValue=$(", fslPath, "/fslstats $tmpdir/brainmasked_tpl.nii -k $tmpdir/brainmask_tpl.nii -p 95)\n",
+            fslPath, "/fslmaths $tmpdir/brainmask_tpl.nii -binv -mul $csfValue $tmpdir/brainmask_inv_tpl.nii\n",
+            fslPath, "/fslmaths $tmpdir/brainmasked_tpl.nii -add $tmpdir/brainmask_inv_tpl.nii ", target.c_str(), "\n",
+            "\n",
+            "# create epi mask\n",
+            fslPath, "/fslmaths ", meanCmd, " -mas $tmpdir/brainmask_input.nii $tmpdir/brainmasked_input.nii\n",
+            "csfValue=$(", fslPath, "/fslstats $tmpdir/brainmasked_input.nii -k $tmpdir/brainmask_input.nii -p 95)\n",
+            fslPath, "/fslmaths $tmpdir/brainmask_input.nii -binv -mul $csfValue $tmpdir/brainmask_inv_input.nii\n",
+            fslPath, "/fslmaths $tmpdir/brainmasked_input.nii -add $tmpdir/brainmask_inv_input.nii ", source.c_str(), "\n",
+            NULL
+        );
+    }
+    
     return rsStringConcat(
         "# create a temporary directory\n",
         "tmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'rstools-pps'`\n",
         "\n",
         "# compute mean\n",
-        "fslmaths ", input->value, " -Tmean ", meanCmd, "\n",
+        fslPath, "/fslmaths ", input->value, " -Tmean ", meanCmd, "\n",
+        stripskullCmd.c_str(),
         "\n",
         "# perform registration\n",
-        ANTSPATH, "ANTS 3 -m ", metricCmd.c_str(), epiTemplate->value, ",", meanCmd, ",", metricParamCmd.c_str(), " -t ", transformationCmd.c_str(), " -r ", regularizationionCmd.c_str(), " -o $tmpdir/tpl -i ", maxIterationsCmd, " --use-Histogram-Matching --number-of-affine-iterations ", maxAffineIterationsCmd, " --MI-option 32x16000\n",
+        ANTSPATH, "ANTS 3 -m ", metricCmd.c_str(), target.c_str(), ",", source.c_str(), ",", metricParamCmd.c_str(), " -t ", transformationCmd.c_str(), " -r ", regularizationionCmd.c_str(), " -o $tmpdir/tpl -i ", maxIterationsCmd, " --use-Histogram-Matching --number-of-affine-iterations ", maxAffineIterationsCmd, " --MI-option 32x16000\n",
         "\n",
         "# save resulting transformation parameters\n",
-        "cp $tmpdir/tplWarp.nii.gz ", epi2EpiTemplateWarp->value, "\n",
-        "cp $tmpdir/tplInverseWarp.nii.gz ", epi2EpiTemplateInvWarp->value, "\n",
-        "cp $tmpdir/tplAffine.txt ", epi2EpiTemplateAffine->value, "\n",
+        "cp $tmpdir/tplWarp.nii.gz ", epi2EpiTemplateWarp, "\n",
+        "cp $tmpdir/tplInverseWarp.nii.gz ", epi2EpiTemplateInvWarp, "\n",
+        "cp $tmpdir/tplAffine.txt ", epi2EpiTemplateAffine, "\n",
         "rm -rf $tmpdir",
         NULL
     );
