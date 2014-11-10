@@ -107,6 +107,14 @@ rsUIInterface* SliceTiming::createUI()
         o->cli_description     = rsString("specify TR of data");
         o->cli_arg_description = rsString("<rate in s>");
         rsUIAddOption(interface, o);
+        
+        o = rsUINewOption();
+        o->name                = rsString("ocustom");
+        o->shorthand           = 'c';
+        o->type                = G_OPTION_ARG_FILENAME;
+        o->cli_description     = rsString("filename of single-column custom interleave order file (first slice is referred to as 1 not 0)");
+        o->cli_arg_description = rsString("<*.txt>");
+        rsUIAddOption(interface, o);
     }
     
     o = rsUINewOption();

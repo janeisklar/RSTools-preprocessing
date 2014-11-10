@@ -20,6 +20,7 @@ char* SliceTiming::getCmd() {
     rsArgument *repeatArg        = this->getArgument("repeat");
     rsArgument *sliceIndexingArg = this->getArgument("sliceIndexing");
     rsArgument *oddArg           = this->getArgument("odd");
+    rsArgument *ocustomArg       = this->getArgument("ocustom");
 
     char *fslPath = this->getJob()->getArgument("fslPath")->value;
 
@@ -42,10 +43,14 @@ char* SliceTiming::getCmd() {
     const char *sliceIndexingCmd = (sliceIndexingArg==NULL || !strcmp(sliceIndexingArg->value, "bottom-up"))
                                    ? ""
                                    : " --down";
+    
+    const char *ocustomCmd       = (ocustomArg==NULL || !strcmp(ocustomArg->value, ""))
+                                   ? ""
+                                   : rsStringConcat(" --ocustom=", ocustomArg->value, NULL);
 
     // prepare the call for the slicetimer    
     char *cmd = rsStringConcat(
-        fslPath, "/slicetimer --in=", input, " --out=", output, " --repeat=", repeat, " --direction=", direction, oddCmd, sliceIndexingCmd,
+        fslPath, "/slicetimer --in=", input, " --out=", output, " --repeat=", repeat, " --direction=", direction, oddCmd, sliceIndexingCmd, ocustomCmd,
         NULL
     );
 
