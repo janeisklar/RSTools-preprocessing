@@ -120,7 +120,7 @@ char* Normalization::getCmd() {
             "\n",
             "# warp brain mask\n",
             ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_tpl.nii -R $tmpdir/edges_tpl.nii -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
-            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_input.nii -R $tmpdir/edges_input.nii -i $tmpdir/tplAffine.txt $tmpdir/tplInverseWarp.nii.gz -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
+            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_input.nii -R ", meanCmd, " -i $tmpdir/tplAffine.txt $tmpdir/tplInverseWarp.nii.gz -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
             "\n",
             "# create epi template mask\n",
             fslPath, "/fslmaths ", epiTemplate, " -mas $tmpdir/brainmask_tpl.nii $tmpdir/brainmasked_tpl.nii\n",
