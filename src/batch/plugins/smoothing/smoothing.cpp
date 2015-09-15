@@ -38,7 +38,7 @@ rsXSDExtension* Smoothing::createSmoothingToolXSDExtension()
 
 const char* Smoothing::getName()
 {
-    return "Smoothing";
+    return "Smoothing (FSL)";
 }
 
 const char* Smoothing::getCode()
@@ -58,7 +58,7 @@ RSTool* Smoothing::createSmoothingTool()
 
 RSTask* Smoothing::createSmoothingTask()
 {
-    return (RSTask*) new task::Smoothing("smoothing", "Smoothing");
+    return (RSTask*) new task::Smoothing("smoothing", "Smoothing (FSL)");
 }
 
 }}}} // namespace rstools::batch::plugins::smoothing
