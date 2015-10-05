@@ -23,6 +23,7 @@ public:
     
 protected:
     void _init();
+    virtual bool _prepareStream();
 };
 
 }}}}} // namespace rstools::batch::plugins::despiking::tool

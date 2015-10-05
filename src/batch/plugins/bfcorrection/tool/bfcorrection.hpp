@@ -22,7 +22,9 @@ public:
     rsUIInterface* createUI();
     
 protected:
-    void _init();    
+    void _init();
+
+    virtual bool _prepareStream();
 };
 
 }}}}} // namespace rstools::batch::plugins::bfcorrection::tool

@@ -1,3 +1,4 @@
+#include <batch/util/rstask.hpp>
 #include "transformation.hpp"
 #include "utils/rsstring.h"
 
@@ -12,11 +13,11 @@ namespace task {
 Transformation::Transformation(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Transformation::getCmd() {
+char* Transformation::getCmd(bool asExecuted) {
     
     // acquire necessary parameters
     const char *input                  = this->getArgument("input")->value;
-    const char *output                 = this->getArgument("output")->value;
+    const char *output                 = asExecuted ? this->getArgument("rsstream_output")->value : this->getArgument("output")->value;
     const char *reference              = this->getArgument("reference")->value;
     const char *epi2EpiTemplateWarp    = this->getArgument("epi2EpiTemplateWarp")->value;
     const char *epi2EpiTemplateInvWarp = this->getArgument("epi2EpiTemplateInvWarp")->value;

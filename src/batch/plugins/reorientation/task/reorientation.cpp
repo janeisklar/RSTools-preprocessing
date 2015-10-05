@@ -11,7 +11,7 @@ namespace task {
 Reorientation::Reorientation(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Reorientation::getCmd() {
+char* Reorientation::getCmd(bool asExecuted) {
     
     rsArgument *input = this->getArgument("input");
     rsArgument *output = this->getArgument("output");

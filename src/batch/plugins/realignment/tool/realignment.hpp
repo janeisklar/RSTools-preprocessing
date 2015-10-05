@@ -23,6 +23,8 @@ public:
     
 protected:
     void _init();
+    virtual bool _prepareStream();
+    virtual void _moveOutputIfNecessary();
 };
 
 }}}}} // namespace rstools::batch::plugins::realignment::tool

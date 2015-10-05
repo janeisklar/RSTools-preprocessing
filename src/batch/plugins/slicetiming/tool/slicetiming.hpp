@@ -24,6 +24,7 @@ public:
     
 protected:
     void _init();
+    virtual bool _prepareStream();
     bool multibandActive;
 };
 

@@ -11,11 +11,11 @@ namespace task {
 BFCorrection::BFCorrection(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* BFCorrection::getCmd() {
+char* BFCorrection::getCmd(bool asExecuted) {
     
     rsArgument *input = this->getArgument("input");
     rsArgument *input2 = this->getArgument("secondaryInput");
-    rsArgument *output = this->getArgument("output");
+    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
     rsArgument *bfield = this->getArgument("bfield");
     rsArgument *shrinkfactor = this->getArgument("shrinkfactor");
     

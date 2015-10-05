@@ -149,4 +149,25 @@ void SliceTiming::setMultibandActive(bool mbActive)
     this->multibandActive = mbActive;
 }
 
+bool SliceTiming::_prepareStream()
+{
+    // assemble temporary stream path
+    streamName = rsStringConcat(tmpDirPath, "/stream.nii", NULL);
+
+    // add stream to list of job arguments
+    rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
+    arg->key = rsString("rsstream_out");
+    arg->value = rsString(streamName);
+    getUnixTask()->addArgument(arg);
+
+    // set the target path of the stream
+    streamTarget = rsString(getUnixTask()->getArgument("out")->value);
+
+    // read in header information of the input nifti
+    inputNifti = nifti_image_read(getUnixTask()->getArgument("in")->value, false);
+
+    // create stream
+    return this->_createStream(streamName);
+}
+
 }}}}} // namespace rstools::batch::plugins::slicetiming::tool

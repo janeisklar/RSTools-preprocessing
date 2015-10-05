@@ -11,10 +11,11 @@ namespace task {
 Despiking::Despiking(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Despiking::getCmd() {
+char* Despiking::getCmd(bool asExecuted) {
     
     rsArgument *input = this->getArgument("input");
-    rsArgument *output = this->getArgument("output");
+    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
+    rsArgument *finalOutput = this->getArgument("output");
     rsArgument *corder = this->getArgument("corder");
     rsArgument *methodNew = this->getArgument("NEW");
     
@@ -27,7 +28,7 @@ char* Despiking::getCmd() {
                          : " -NEW";
     
     return rsStringConcat(
-        "rm -f ", output->value,
+        "rm -f ", finalOutput->value,
         "\n",
         afniPath, "/3dDespike", " -prefix ", output->value, corderCmd, newCmd, " -nomask", " -q ", input->value,
         NULL

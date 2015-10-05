@@ -12,7 +12,7 @@ namespace task {
 Normalization::Normalization(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Normalization::getCmd() {
+char* Normalization::getCmd(bool asExecuted) {
     
     // acquire parameters
     rsArgument *input                  = this->getArgument("input");

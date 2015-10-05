@@ -13,7 +13,7 @@ namespace task {
 Regressors::Regressors(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Regressors::getCmd() {
+char* Regressors::getCmd(bool asExecuted) {
     
     rsArgument *input = this->getArgument("input");
     rsArgument *output = this->getArgument("output");

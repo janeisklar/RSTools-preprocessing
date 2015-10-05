@@ -1,3 +1,4 @@
+#include <batch/util/rstask.hpp>
 #include "mbslicetiming.hpp"
 
 using namespace rstools::batch::util;
@@ -11,10 +12,11 @@ namespace task {
 MBSliceTiming::MBSliceTiming(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* MBSliceTiming::getCmd() {
+char* MBSliceTiming::getCmd(bool asExecuted) {
     
     const char *input        = this->getArgument("in")->value;
-    const char *output       = this->getArgument("out")->value;
+    const char *output       = asExecuted ? this->getArgument("rsstream_out")->value : this->getArgument("out")->value;
+    const char *finalOutput  = this->getArgument("out")->value;
     const char *tcustom      = this->getArgument("tcustom")->value;
     rsArgument *meanArg      = this->getArgument("mean");
     rsArgument *directionArg = this->getArgument("direction");
@@ -42,7 +44,7 @@ char* MBSliceTiming::getCmd() {
         cmd = rsStringConcat(
             cmd,
             "\n",
-            fslPath, "/fslmaths ", output, " -Tmean ", mean,
+            fslPath, "/fslmaths ", finalOutput, " -Tmean ", mean,
             NULL
         );
         rsFree(oldCmd);

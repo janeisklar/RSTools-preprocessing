@@ -17,7 +17,7 @@ class Realignment : public RSUnixTask {
 public: 
     Realignment(const char* code, const char* name);
     
-    char* getCmd();
+    virtual char* getCmd(bool asExecuted);
 };
 
 }}}}} // namespace rstools::batch::plugins::realignment::task

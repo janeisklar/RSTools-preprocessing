@@ -17,7 +17,7 @@ class Reorientation : public RSUnixTask {
 public: 
     Reorientation(const char* code, const char* name);
     
-    char* getCmd();
+    char* getCmd(bool asExecuted);
 };
 
 }}}}} // namespace rstools::batch::plugins::reorientation::task

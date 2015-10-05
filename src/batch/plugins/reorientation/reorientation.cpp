@@ -38,7 +38,7 @@ rsXSDExtension* Reorientation::createReorientationToolXSDExtension()
 
 const char* Reorientation::getName()
 {
-    return "Reorientation";
+    return "Reorientation (AFNI)";
 }
 
 const char* Reorientation::getCode()
@@ -58,7 +58,7 @@ RSTool* Reorientation::createReorientationTool()
 
 RSTask* Reorientation::createReorientationTask()
 {
-    return (RSTask*) new task::Reorientation("reorientation", "Reorientation");
+    return (RSTask*) new task::Reorientation("reorientation", "Reorientation (AFNI)");
 }
 
 }}}} // namespace rstools::batch::plugins::reorientation

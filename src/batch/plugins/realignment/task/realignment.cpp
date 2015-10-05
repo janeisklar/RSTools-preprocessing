@@ -11,10 +11,10 @@ namespace task {
 Realignment::Realignment(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Realignment::getCmd() {
+char* Realignment::getCmd(bool asExecuted) {
     
     rsArgument *input = this->getArgument("input");
-    rsArgument *output = this->getArgument("output");
+    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
     rsArgument *stages = this->getArgument("stages");
     
     const char *fslPath = this->getJob()->getArgument("fslPath")->value;

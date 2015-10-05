@@ -1,3 +1,4 @@
+#include <batch/util/rstask.hpp>
 #include "realignment.hpp"
 #include "utils/rsstring.h"
 
@@ -60,6 +61,58 @@ rsUIInterface* Realignment::createUI()
     rsUIAddOption(interface, o);
     
     return interface;
+}
+
+bool Realignment::_prepareStream()
+{
+    // assemble temporary stream path
+    streamName = rsStringConcat(tmpDirPath, "/stream.nii", NULL);
+
+    // add stream to list of job arguments
+    rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
+    arg->key = rsString("rsstream_output");
+    arg->value = rsString(streamName);
+    getUnixTask()->addArgument(arg);
+
+    // set the target path of the stream
+    streamTarget = rsString(getUnixTask()->getArgument("output")->value);
+
+    // read in header information of the input nifti
+    inputNifti = nifti_image_read(getUnixTask()->getArgument("input")->value, false);
+
+    // create stream
+    return this->_createStream(streamName);
+}
+
+void Realignment::_moveOutputIfNecessary()
+{
+    if (streamName == NULL) {
+        return;
+    }
+
+    // mcflirt will create some additional files that we'll have to move from
+    // the temporary directory
+
+    // copy .mat/* files
+    char *matFilesSrc  = rsStringConcat(tmpDirPath, "/stream.nii.mat", NULL);
+    char *matFilesDest = rsStringConcat(streamTarget, ".mat", NULL);
+
+    char *cmd = (char*)rsMalloc(sizeof(char)*20000);
+    sprintf(cmd, "/bin/rm -rf \'%s\'; /bin/cp -R -p \'%s\' \'%s\'", matFilesDest, matFilesSrc, matFilesDest);
+    system(cmd);
+
+    rsFree(matFilesSrc);
+    rsFree(matFilesDest);
+
+    // copy .par file
+    char *parFilesSrc  = rsStringConcat(tmpDirPath, "/stream.nii.par", NULL);
+    char *parFilesDest = rsStringConcat(streamTarget, ".par", NULL);
+    sprintf(cmd, "/bin/cp -f -p \'%s\' \'%s\'", parFilesSrc, parFilesDest);
+    system(cmd);
+
+    rsFree(parFilesSrc);
+    rsFree(parFilesDest);
+    rsFree(cmd);
 }
 
 }}}}} // namespace rstools::batch::plugins::realignment::tool

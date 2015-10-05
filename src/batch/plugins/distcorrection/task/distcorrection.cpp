@@ -11,10 +11,10 @@ namespace task {
 Distcorrection::Distcorrection(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Distcorrection::getCmd() {
+char* Distcorrection::getCmd(bool asExecuted) {
     
     rsArgument *input  = this->getArgument("input");
-    rsArgument *output = this->getArgument("output");
+    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
     rsArgument *vdm    = this->getArgument("vdm");
     rsArgument *mean   = this->getArgument("mean");
     

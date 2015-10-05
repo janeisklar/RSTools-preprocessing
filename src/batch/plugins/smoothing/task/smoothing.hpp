@@ -17,7 +17,7 @@ class Smoothing : public RSUnixTask {
 public: 
     Smoothing(const char* code, const char* name);
     
-    char* getCmd();
+    char* getCmd(bool asExecuted);
 };
 
 }}}}} // namespace rstools::batch::plugins::smoothing::task

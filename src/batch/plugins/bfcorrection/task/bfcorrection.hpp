@@ -17,7 +17,7 @@ class BFCorrection : public RSUnixTask {
 public: 
     BFCorrection(const char* code, const char* name);
     
-    char* getCmd();
+    char* getCmd(bool asExecuted);
 };
 
 }}}}} // namespace rstools::batch::plugins::bfcorrection::task

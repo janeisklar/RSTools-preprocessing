@@ -22,6 +22,7 @@ public:
     rsUIInterface* createUI();
     
 protected:
+    virtual bool _prepareStream();
     void _init();
 };
 

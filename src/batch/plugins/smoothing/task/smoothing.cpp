@@ -12,11 +12,11 @@ namespace task {
 Smoothing::Smoothing(const char* code, const char* name) : RSUnixTask(code, name)
 {}
 
-char* Smoothing::getCmd() {
+char* Smoothing::getCmd(bool asExecuted) {
     
     // obtain parameters
     rsArgument *input = this->getArgument("input");
-    rsArgument *output = this->getArgument("output");
+    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
     rsArgument *method = this->getArgument("method");
     rsArgument *kernelSize = this->getArgument("kernelSize");
     rsArgument *brightnessThreshold = this->getArgument("brightnessThreshold");
