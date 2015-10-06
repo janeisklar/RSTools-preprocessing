@@ -128,6 +128,19 @@ bool Distcorrection::_prepareStream()
         getUnixTask()->addArgument(arg);
     }
 
+    if (info->PhaseEncodingDirection != NULL && strlen(&info->PhaseEncodingDirection[0]) == 2) {
+        rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
+        char *phaseEncDir = (char*)rsMalloc(sizeof(char)*3);
+        sprintf(phaseEncDir, "%s", info->PhaseEncodingDirection);
+        arg->key = rsString("phaseEncDir");
+        arg->value = rsString(&info->PhaseEncodingDirection[0]);
+        // fsl expects the format to be either y- or just y (for y+)
+        if (arg->value[1]=='+') {
+            arg->value[1] = '\0';
+        }
+        getUnixTask()->addArgument(arg);
+    }
+
     rsCloseNiftiFile(input, FALSE);
     rsFreeNiftiFile(input);
 

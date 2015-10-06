@@ -20,19 +20,24 @@ char* FMDistcorrection::getCmd(bool asExecuted) {
     rsArgument *fieldmap    = this->getArgument("fieldmap");
     rsArgument *mean        = this->getArgument("mean");
     rsArgument *dwellTime   = this->getArgument("dwellTime");
+    rsArgument *phaseEncDir = this->getArgument("phaseEncDir");
     
     const char *fslPath  = this->getJob()->getArgument("fslPath")->value;
     const char *dwellArg = (dwellTime == NULL)
                            ? rsString("")
                            : rsStringConcat(" --dwell=", dwellTime->value, NULL);
 
+    const char *phaseEncDirArg = (phaseEncDir == NULL)
+                                 ? rsString("")
+                                 : rsStringConcat(" --unwarpdir=", phaseEncDir->value, NULL);
+
     if (mean == NULL) {
         return rsStringConcat(
-            fslPath, "/fugue -i ", input->value, " --loadfmap=", fieldmap->value, dwellArg, " -u ", output->value, NULL
+            fslPath, "/fugue -i ", input->value, " --loadfmap=", fieldmap->value, dwellArg, phaseEncDirArg, " -u ", output->value, NULL
         );
     } else {
         return rsStringConcat(
-            fslPath, "/fugue -i ", input->value, " --loadfmap=", fieldmap->value, dwellArg, " -u ", output->value,
+            fslPath, "/fugue -i ", input->value, " --loadfmap=", fieldmap->value, dwellArg, phaseEncDirArg, " -u ", output->value,
             "\n",
             fslPath, "/fslmaths ", finalOutput->value, " -Tmean ", mean->value,
             NULL
