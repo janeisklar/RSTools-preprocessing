@@ -1,0 +1,7 @@
+<xs:complexType name="fmdistcorrection">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for fmdiscorrection -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>

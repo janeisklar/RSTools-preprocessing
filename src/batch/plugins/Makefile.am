@@ -39,7 +39,7 @@ libSmoothingPlugin_la_SOURCES = smoothing/task/smoothing.cpp smoothing/tool/smoo
 libSmoothingPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libSmoothingPlugin_la_LDFLAGS = -module -export-dynamic
 
-libDistortionCorrectionPlugin_la_SOURCES = distcorrection/task/distcorrection.cpp distcorrection/tool/distcorrection.cpp distcorrection/distcorrection.cpp
+libDistortionCorrectionPlugin_la_SOURCES = distcorrection/task/distcorrection.cpp distcorrection/task/fmdistcorrection.cpp distcorrection/tool/distcorrection.cpp distcorrection/distcorrection.cpp
 libDistortionCorrectionPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libDistortionCorrectionPlugin_la_LDFLAGS = -module -export-dynamic
 
@@ -69,17 +69,18 @@ plugins_DATA =                             \
 	.libs/libTransformationPlugin.so
 
 jobpluginsdir = $(datadir)/$(PACKAGE)/jobs/plugins
-jobplugins_DATA =                                     \
-	../../../share/jobs/plugins/slicetiming.xsdext    \
-	../../../share/jobs/plugins/mbslicetiming.xsdext  \
-	../../../share/jobs/plugins/despiking.xsdext      \
-	../../../share/jobs/plugins/bfcorrection.xsdext   \
-	../../../share/jobs/plugins/realignment.xsdext    \
-	../../../share/jobs/plugins/reorientation.xsdext  \
-	../../../share/jobs/plugins/smoothing.xsdext      \
-	../../../share/jobs/plugins/distcorrection.xsdext \
-	../../../share/jobs/plugins/regressors.xsdext     \
-	../../../share/jobs/plugins/normalization.xsdext  \
+jobplugins_DATA =                                       \
+	../../../share/jobs/plugins/slicetiming.xsdext      \
+	../../../share/jobs/plugins/mbslicetiming.xsdext    \
+	../../../share/jobs/plugins/despiking.xsdext        \
+	../../../share/jobs/plugins/bfcorrection.xsdext     \
+	../../../share/jobs/plugins/realignment.xsdext      \
+	../../../share/jobs/plugins/reorientation.xsdext    \
+	../../../share/jobs/plugins/smoothing.xsdext        \
+	../../../share/jobs/plugins/distcorrection.xsdext   \
+	../../../share/jobs/plugins/fmdistcorrection.xsdext \
+	../../../share/jobs/plugins/regressors.xsdext       \
+	../../../share/jobs/plugins/normalization.xsdext    \
 	../../../share/jobs/plugins/transformation.xsdext
 
 

@@ -20,14 +20,20 @@ class Distcorrection : Plugin {
         void  registerPlugin();
         const char* getName();
         const char* getCode();
+        const char* getFMName();
+        const char* getFMCode();
         const char* getVersion();
 
         static RSTool* createDistcorrectionTool();
         static RSTask* createDistcorrectionTask();
+        static RSTool* createFMDistcorrectionTool();
+        static RSTask* createFMDistcorrectionTask();
         
     protected:
         rsToolRegistration* createDistcorrectionToolRegistration();
         rsXSDExtension* createDistcorrectionToolXSDExtension();
+        rsToolRegistration* createFMDistcorrectionToolRegistration();
+        rsXSDExtension* createFMDistcorrectionToolXSDExtension();
 };
 
 }}}} // namespace rstools::batch::plugins::distcorrection

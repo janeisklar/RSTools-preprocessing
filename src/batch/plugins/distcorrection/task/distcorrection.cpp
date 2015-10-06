@@ -13,23 +13,26 @@ Distcorrection::Distcorrection(const char* code, const char* name) : RSUnixTask(
 
 char* Distcorrection::getCmd(bool asExecuted) {
     
-    rsArgument *input  = this->getArgument("input");
-    rsArgument *output = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
-    rsArgument *vdm    = this->getArgument("vdm");
-    rsArgument *mean   = this->getArgument("mean");
+    rsArgument *input       = this->getArgument("input");
+    rsArgument *output      = asExecuted ? this->getArgument("rsstream_output") : this->getArgument("output");
+    rsArgument *finalOutput = this->getArgument("output");
+    rsArgument *vdm         = this->getArgument("vdm");
+    rsArgument *mean        = this->getArgument("mean");
     
     const char *fslPath = this->getJob()->getArgument("fslPath")->value;
 
-    const char *meanCmd = (mean == NULL)
-                         ? ""
-                         : rsStringConcat(fslPath, "/fslmaths ", output->value, " -Tmean ", mean->value, NULL);
-    
-    return rsStringConcat(
-        fslPath, "/fugue -i ", input->value, " --loadshift=", vdm->value, " -u ", output->value,
-        "\n",
-        meanCmd,
-        NULL
-    );
+    if (mean == NULL) {
+        return rsStringConcat(
+            fslPath, "/fugue -i ", input->value, " --loadshift=", vdm->value, " -u ", output->value, NULL
+        );
+    } else {
+        return rsStringConcat(
+            fslPath, "/fugue -i ", input->value, " --loadshift=", vdm->value, " -u ", output->value,
+            "\n",
+            fslPath, "/fslmaths ", finalOutput->value, " -Tmean ", mean->value,
+            NULL
+        );
+    }
 }
 
 }}}}} // namespace rstools::batch::plugins::distcorrection::task

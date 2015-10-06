@@ -14,16 +14,24 @@ namespace batch {
 namespace plugins {
 namespace distcorrection {
 namespace tool {
-    
+
+enum DistorionCorrectionMode {
+    FIELDMAP,
+    SHIFTMAP
+};
+
 class Distcorrection : public RSUnixTool {
 
 public:
     void destroy();
     rsUIInterface* createUI();
-    
+    void setMode(DistorionCorrectionMode mode);
+
 protected:
     void _init();
     virtual bool _prepareStream();
+
+    DistorionCorrectionMode  mode;
 };
 
 }}}}} // namespace rstools::batch::plugins::distcorrection::tool

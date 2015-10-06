@@ -1,3 +1,6 @@
+#include <nifti/rsniftiutils.h>
+#include <externals/fslio/fslio.h>
+#include <nifti/headerinfo.h>
 #include "distcorrection.hpp"
 #include "utils/rsstring.h"
 
@@ -13,7 +16,8 @@ void Distcorrection::_init()
 {
     rsArgument *input = this->getTask()->getArgument("input");
     rsArgument *output = this->getTask()->getArgument("output");
-    rsArgument *vdm = this->getTask()->getArgument("vdm");    
+    rsArgument *vdm = this->getTask()->getArgument("vdm");
+    rsArgument *fieldmap = this->getTask()->getArgument("fieldmap");
 
     if ( input == NULL ) {
         fprintf(stderr, "An input needs to be specified!\n");
@@ -25,10 +29,18 @@ void Distcorrection::_init()
         this->executionSuccessful = false;
     }
 
-    if ( vdm == NULL ) {
+    if ( mode == SHIFTMAP && vdm == NULL ) {
         fprintf(stderr, "A voxe-displacement map needs to be specified!\n");
         this->executionSuccessful = false;
+    } else if (mode == FIELDMAP && fieldmap == NULL) {
+        fprintf(stderr, "A fieldmap needs to be specified!\n");
+        this->executionSuccessful = false;
     }
+}
+
+void Distcorrection::setMode(DistorionCorrectionMode mode)
+{
+    this->mode = mode;
 }
 
 void Distcorrection::destroy()
@@ -55,15 +67,25 @@ rsUIInterface* Distcorrection::createUI()
     o->cli_description     = rsString("The path of the resulting unwarped dataset.");
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
-    
-    o = rsUINewOption();
-    o->name                = rsString("vdm");
-    o->shorthand           = 'v';
-    o->type                = G_OPTION_ARG_FILENAME;
-    o->cli_description     = rsString("The path to the voxel-displacement map. Please make sure it has the same orientation as the input image.");
-    o->cli_arg_description = rsString("<volume>");
-    rsUIAddOption(interface, o);
-    
+
+    if (mode == SHIFTMAP) {
+        o = rsUINewOption();
+        o->name = rsString("vdm");
+        o->shorthand = 'v';
+        o->type = G_OPTION_ARG_FILENAME;
+        o->cli_description = rsString("The path to the voxel-displacement map. Please make sure it has the same orientation as the input image.");
+        o->cli_arg_description = rsString("<volume>");
+        rsUIAddOption(interface, o);
+    } else if (mode == FIELDMAP) {
+        o = rsUINewOption();
+        o->name = rsString("fieldmap");
+        o->shorthand = 'f';
+        o->type = G_OPTION_ARG_FILENAME;
+        o->cli_description = rsString("The path to the fieldmap");
+        o->cli_arg_description = rsString("<volume>");
+        rsUIAddOption(interface, o);
+    }
+
     o = rsUINewOption();
     o->name                = rsString("mean");
     o->shorthand           = 'm';
@@ -91,6 +113,23 @@ bool Distcorrection::_prepareStream()
 
     // read in header information of the input nifti
     inputNifti = nifti_image_read(getUnixTask()->getArgument("input")->value, false);
+
+    // read out dwell time (if present);
+    rsNiftiFile* input = rsOpenNiftiFile(getUnixTask()->getArgument("input")->value, RSNIFTI_OPEN_NONE);
+    rsNiftiExtendedHeaderInformation* info;
+    info = rsNiftiFindExtendedHeaderInformation(input->fslio->niftiptr);
+
+    if (!isnan(info->DwellTime)) {
+        rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
+        char *dwellTime = (char*)rsMalloc(sizeof(char)*30);
+        sprintf(dwellTime, "%.10f", info->DwellTime);
+        arg->key = rsString("dwellTime");
+        arg->value = dwellTime;
+        getUnixTask()->addArgument(arg);
+    }
+
+    rsCloseNiftiFile(input, FALSE);
+    rsFreeNiftiFile(input);
 
     // create stream
     return this->_createStream(streamName);
