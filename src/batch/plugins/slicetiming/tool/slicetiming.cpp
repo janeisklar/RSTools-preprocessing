@@ -1,3 +1,4 @@
+#include <nifti/headerinfo.h>
 #include "slicetiming.hpp"
 #include "utils/rsstring.h"
 #include "batch/util/rsunix.hpp"
@@ -25,14 +26,7 @@ void SliceTiming::_init()
         this->executionSuccessful = false;
     }
     
-    if ( this->multibandActive ) {
-        rsArgument *tcustom = this->getTask()->getArgument("tcustom");
-        
-        if ( tcustom == NULL ) {
-            fprintf(stderr, "A file containing the slice shifts (tcustom) needs to be specified!\n");
-            this->executionSuccessful = false;
-        }
-    } else {
+    if ( !this->multibandActive ) {
         rsArgument *repeat = this->getTask()->getArgument("repeat");
         
         if ( repeat == NULL ) {
@@ -81,7 +75,7 @@ rsUIInterface* SliceTiming::createUI()
         o->name                = rsString("tcustom");
         o->shorthand           = 't';
         o->type                = G_OPTION_ARG_FILENAME;
-        o->cli_description     = rsString("filename of single-column slice timings, in fractions of TR, +ve values shift slices forwards in time.");
+        o->cli_description     = rsString("filename of single-column slice timings, in fractions of TR, +ve values shift slices forwards in time. This file can be omitted if the nifti header contains the slice acquisition times and TR (if not specified, the correction to the middle of the acquistion time is automatically computed using the data form the header).");
         o->cli_arg_description = rsString("<txt-file>");
         rsUIAddOption(interface, o);
     } else {
@@ -165,6 +159,19 @@ bool SliceTiming::_prepareStream()
 
     // read in header information of the input nifti
     inputNifti = nifti_image_read(getUnixTask()->getArgument("in")->value, false);
+
+    // read out slice timings (if present);
+    rsNiftiFile* input = rsOpenNiftiFile(getUnixTask()->getArgument("in")->value, RSNIFTI_OPEN_NONE);
+    rsNiftiExtendedHeaderInformation* info;
+    info = rsNiftiFindExtendedHeaderInformation(input->fslio->niftiptr);
+
+    if (!isnan(info->MosaicRefAcqTimes[0])) {
+        getUnixTask()->setInputNiftiHeaderInformation(info);
+    }
+
+    // close nifti
+    rsCloseNiftiFile(input, FALSE);
+    rsFreeNiftiFile(input);
 
     // create stream
     return this->_createStream(streamName);
