@@ -119,7 +119,7 @@ bool Distcorrection::_prepareStream()
     rsNiftiExtendedHeaderInformation* info;
     info = rsNiftiFindExtendedHeaderInformation(input->fslio->niftiptr);
 
-    if (!isnan(info->DwellTime)) {
+    if (info != NULL && !isnan(info->DwellTime)) {
         rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
         char *dwellTime = (char*)rsMalloc(sizeof(char)*30);
         sprintf(dwellTime, "%.10f", info->DwellTime);
@@ -128,7 +128,7 @@ bool Distcorrection::_prepareStream()
         getUnixTask()->addArgument(arg);
     }
 
-    if (info->PhaseEncodingDirection != NULL && strlen(&info->PhaseEncodingDirection[0]) == 2) {
+    if (info != NULL && info->PhaseEncodingDirection != NULL && strlen(&info->PhaseEncodingDirection[0]) == 2) {
         rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
         char *phaseEncDir = (char*)rsMalloc(sizeof(char)*3);
         sprintf(phaseEncDir, "%s", info->PhaseEncodingDirection);

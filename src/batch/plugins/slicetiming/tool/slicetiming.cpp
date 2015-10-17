@@ -165,7 +165,7 @@ bool SliceTiming::_prepareStream()
     rsNiftiExtendedHeaderInformation* info;
     info = rsNiftiFindExtendedHeaderInformation(input->fslio->niftiptr);
 
-    if (!isnan(info->MosaicRefAcqTimes[0])) {
+    if (info != NULL && !isnan(info->MosaicRefAcqTimes[0])) {
         getUnixTask()->setInputNiftiHeaderInformation(info);
     }
 
