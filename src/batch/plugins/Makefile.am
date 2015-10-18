@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-AM_CFLAGS = -DDATA_PATH=\"$(datadir)\" -I$(top_srcdir)/src
-AM_CPPFLAGS = -DDATA_PATH=\"$(datadir)\" -I$(top_srcdir)/src
+AM_CFLAGS = -DDATA_PATH=\"$(datadir)\" -DDATA_PATH=\"$(datadir)\" -DEXECUTABLES_PATH=\"$(bindir)\" -I$(top_srcdir)/src
+AM_CPPFLAGS = -DDATA_PATH=\"$(datadir)\" -DEXECUTABLES_PATH=\"$(bindir)\" -I$(top_srcdir)/src
 
 lib_LTLIBRARIES =                    \
 	libSliceTimingPlugin.la          \
@@ -47,7 +47,7 @@ libMergeRegressorsPlugin_la_SOURCES = regressors/task/regressors.cpp regressors/
 libMergeRegressorsPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libMergeRegressorsPlugin_la_LDFLAGS = -module -export-dynamic
 
-libNormalizationPlugin_la_SOURCES = normalization/task/normalization.cpp normalization/tool/normalization.cpp normalization/normalization.cpp
+libNormalizationPlugin_la_SOURCES = normalization/task/normalization.cpp normalization/task/newnormalization.cpp normalization/tool/normalization.cpp normalization/normalization.cpp
 libNormalizationPlugin_la_LIBADD  = $(LDADD) @LIBOBJS@
 libNormalizationPlugin_la_LDFLAGS = -module -export-dynamic
 
@@ -81,6 +81,7 @@ jobplugins_DATA =                                       \
 	../../../share/jobs/plugins/fmdistcorrection.xsdext \
 	../../../share/jobs/plugins/regressors.xsdext       \
 	../../../share/jobs/plugins/normalization.xsdext    \
+	../../../share/jobs/plugins/newnormalization.xsdext \
 	../../../share/jobs/plugins/transformation.xsdext
 
 

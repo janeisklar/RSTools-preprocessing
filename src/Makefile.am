@@ -13,6 +13,7 @@ nobase_pkginclude_HEADERS =                                     \
     batch/plugins/distcorrection/tool/distcorrection.hpp		\
     batch/plugins/normalization/normalization.hpp				\
     batch/plugins/normalization/task/normalization.hpp			\
+    batch/plugins/normalization/task/newnormalization.hpp		\
     batch/plugins/normalization/tool/normalization.hpp			\
     batch/plugins/realignment/realignment.hpp					\
     batch/plugins/realignment/task/realignment.hpp				\

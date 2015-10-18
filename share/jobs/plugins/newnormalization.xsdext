@@ -1,0 +1,7 @@
+<xs:complexType name="newnormalization">
+    <xs:complexContent>
+        <xs:extension base="rstask">
+            <!-- no further extensions needed for newnormalization -->
+        </xs:extension>
+    </xs:complexContent>
+</xs:complexType>

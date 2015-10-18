@@ -20,9 +20,11 @@ class Normalization : public RSUnixTool {
 public:
     void destroy();
     rsUIInterface* createUI();
+    void setUseNewANTS(bool useNewAnts);
     
 protected:
     void _init();
+    bool useNewAnts;
 };
 
 }}}}} // namespace rstools::batch::plugins::normalization::tool

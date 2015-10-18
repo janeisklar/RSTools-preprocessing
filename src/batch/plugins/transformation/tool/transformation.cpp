@@ -53,11 +53,17 @@ rsUIInterface* Transformation::createUI()
     o->cli_description     = rsString("path to the dataset which is to be transformed");
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
-    
+
     o = rsUINewOption();
     o->name                = rsString("4dinput");
     o->shorthand           = '4';
     o->cli_description     = rsString("whether the input is a 4D-dataset");
+    rsUIAddOption(interface, o);
+
+    o = rsUINewOption();
+    o->name                = rsString("new");
+    o->shorthand           = 'n';
+    o->cli_description     = rsString("whether the transformation should be carried out using the new antsApplyTransforms. (recommended when the new normalization was used)");
     rsUIAddOption(interface, o);
     
     o = rsUINewOption();

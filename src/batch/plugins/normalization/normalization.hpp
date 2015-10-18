@@ -5,6 +5,7 @@
 #include "batch/util/plugin.hpp"
 #include "tool/normalization.hpp"
 #include "task/normalization.hpp"
+#include "task/newnormalization.hpp"
 
 using namespace rstools::batch::util;
 
@@ -20,14 +21,21 @@ class Normalization : Plugin {
         void  registerPlugin();
         const char* getName();
         const char* getCode();
+        const char* getNewName();
+        const char* getNewCode();
         const char* getVersion();
 
         static RSTool* createNormalizationTool();
+        static RSTool* createNewNormalizationTool();
         static RSTask* createNormalizationTask();
+        static RSTask* createNewNormalizationTask();
         
     protected:
         rsToolRegistration* createNormalizationToolRegistration();
         rsXSDExtension* createNormalizationToolXSDExtension();
+
+        rsToolRegistration* createNewNormalizationToolRegistration();
+        rsXSDExtension* createNewNormalizationToolXSDExtension();
 };
 
 }}}} // namespace rstools::batch::plugins::normalization

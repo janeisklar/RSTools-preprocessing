@@ -14,6 +14,9 @@ void Normalization::registerPlugin()
 {
     RSTool::registerTool(createNormalizationToolRegistration());
     RSTool::registerXSDExtension(createNormalizationToolXSDExtension());
+
+    RSTool::registerTool(createNewNormalizationToolRegistration());
+    RSTool::registerXSDExtension(createNewNormalizationToolXSDExtension());
 }
 
 rsToolRegistration* Normalization::createNormalizationToolRegistration()
@@ -36,14 +39,44 @@ rsXSDExtension* Normalization::createNormalizationToolXSDExtension()
     return toolExtension;
 }
 
+rsToolRegistration* Normalization::createNewNormalizationToolRegistration()
+{
+    rsToolRegistration* toolRegistration = (rsToolRegistration*)malloc(sizeof(rsToolRegistration));
+    toolRegistration->name       = getNewName();
+    toolRegistration->code       = getNewCode();
+    toolRegistration->category   = "Spatial";
+    toolRegistration->createTool = (rsToolToolCreator)Normalization::createNewNormalizationTool;
+    toolRegistration->createTask = (rsToolTaskCreator)Normalization::createNewNormalizationTask;
+    return toolRegistration;
+}
+
+rsXSDExtension* Normalization::createNewNormalizationToolXSDExtension()
+{
+    rsXSDExtension* toolExtension = (rsXSDExtension*)malloc(sizeof(rsXSDExtension));
+    toolExtension->name           = getNewCode();
+    toolExtension->file           = RSTOOLS_DATA_DIR "/" PACKAGE "/jobs/plugins/newnormalization.xsdext";
+    toolExtension->type           = getNewCode();
+    return toolExtension;
+}
+
 const char* Normalization::getName()
 {
-    return "Normalization";
+    return "Normalization (old)";
 }
 
 const char* Normalization::getCode()
 {
     return "normalization";
+}
+
+const char* Normalization::getNewName()
+{
+    return "Normalization";
+}
+
+const char* Normalization::getNewCode()
+{
+    return "newnormalization";
 }
 
 const char* Normalization::getVersion()
@@ -53,12 +86,26 @@ const char* Normalization::getVersion()
 
 RSTool* Normalization::createNormalizationTool()
 {
-    return (RSTool*)(new tool::Normalization());
+    tool::Normalization *tool = new tool::Normalization();
+    tool->setUseNewANTS(false);
+    return (RSTool*)tool;
+}
+
+RSTool* Normalization::createNewNormalizationTool()
+{
+    tool::Normalization *tool = new tool::Normalization();
+    tool->setUseNewANTS(true);
+    return (RSTool*)tool;
 }
 
 RSTask* Normalization::createNormalizationTask()
 {
-    return (RSTask*) new task::Normalization("normalization", "Normalization");
+    return (RSTask*) new task::Normalization("normalization", "Normalization (old)");
+}
+
+RSTask* Normalization::createNewNormalizationTask()
+{
+    return (RSTask*) new task::NewNormalization("newnormalization", "Normalization");
 }
 
 }}}} // namespace rstools::batch::plugins::normalization
