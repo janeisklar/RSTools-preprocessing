@@ -31,9 +31,10 @@ char* Normalization::getCmd(bool asExecuted) {
     rsArgument *maxAffineIterations    = this->getArgument("maxAffineIterations");
     rsArgument *stripskull             = this->getArgument("stripskull");
         
-    const char *fslPath  = this->getJob()->getArgument("fslPath")->value;
-    const char *ANTSPATH = this->getJob()->getArgument("ANTSPATH")->value;
-    const char *afniPath = this->getJob()->getArgument("afniPath")->value;
+    const char *fslPath     = this->getJob()->getArgument("fslPath")->value;
+    const char *ANTSPATH    = this->getJob()->getArgument("ANTSPATH")->value;
+    const char *afniPath    = this->getJob()->getArgument("afniPath")->value;
+    const char *rstoolsPath = RSTOOLS_EXECUTABLES_PATH;
     
     // determine transformation parameters
     string transformationTypeStr = (transformationType==NULL)
@@ -112,7 +113,7 @@ char* Normalization::getCmd(bool asExecuted) {
             fslPath, "/fslmaths ", epiTemplate, " -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_tpl.nii\n",
             "\n",
             "# compute EPI edges\n",
-            afniPath, "/3dZeropad -prefix $tmpdir/padded_input.nii -I 5 -S 5 -A 5 -P 5 -L 5 -R 5 ", meanCmd, "\n",
+            rstoolsPath, "/rszeropadding -i ", meanCmd, " -o $tmpdir/padded_input.nii -a 5 -b 5 -c 5 -d 5 -e 5 -f 5\n",
             fslPath, "/fslmaths $tmpdir/padded_input.nii -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_input.nii\n",
             "\n",
             "# register EPI edges to EPI template edges\n",
