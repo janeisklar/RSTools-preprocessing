@@ -30,6 +30,7 @@ char* Realignment::getCmd(bool asExecuted) {
         " -mats",
         " -plots",
         " -meanvol",
+        " -sinc_final",
         NULL
     );
 }
