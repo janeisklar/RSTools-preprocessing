@@ -84,6 +84,14 @@ rsUIInterface* Distcorrection::createUI()
         o->cli_description = rsString("The path to the fieldmap");
         o->cli_arg_description = rsString("<volume>");
         rsUIAddOption(interface, o);
+
+        o = rsUINewOption();
+        o->name = rsString("vdm");
+        o->shorthand = 'v';
+        o->type = G_OPTION_ARG_FILENAME;
+        o->cli_description = rsString("The path to the resulting voxel-shift map. Fugue will create this file based on the given input and fieldmap.");
+        o->cli_arg_description = rsString("<volume>");
+        rsUIAddOption(interface, o);
     }
 
     o = rsUINewOption();
