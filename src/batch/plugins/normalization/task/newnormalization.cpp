@@ -60,7 +60,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
         ANTSPATH, "antsApplyTransforms -e 3 -d 3 -i ", brainMask, " -o $tmpdir/brainmask_input.nii -r $tmpdir/deobliqued_input.nii -t \"[$tmpdir/tpl0GenericAffine.mat,1]\" $tmpdir/tpl1InverseWarp.nii.gz -t \"[", epiTemplateAffine, ",1]\" -t ", epiTemplateInvWarp, "\n",
         "\n",
         "# create field of view mask\n",
-        fslPath, "/fslmaths ", input->value, " -Tstd -bin $tmpdir/fov_input.nii\n",
+        fslPath, "/fslmaths ", meanCmd, " -thr 1 -uthr 0 -add 1 $tmpdir/fov_input.nii\n",
         ANTSPATH, "antsApplyTransforms -e 3 -d 3 -i $tmpdir/fov_input.nii -o $tmpdir/deobliqued_fov_input.nii -r $tmpdir/deobliqued_input.nii\n",
         fslPath, "/fslmaths $tmpdir/brainmask_input.nii -mas $tmpdir/deobliqued_fov_input.nii $tmpdir/fov_brainmask_input.nii\n",
         "\n",
