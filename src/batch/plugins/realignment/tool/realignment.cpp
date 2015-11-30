@@ -114,7 +114,7 @@ void Realignment::_moveOutputIfNecessary()
 
     // copy .par file
     char *parFilesSrc  = rsStringConcat(tmpDirPath, "/stream.nii.par", NULL);
-    char *parFilesDest = rsStringConcat(streamTarget, ".par", NULL);
+    char *parFilesDest = rsStringConcat(streamTarget, ".par.txt", NULL);
     sprintf(cmd, "/bin/cp -f -p \'%s\' \'%s\'", parFilesSrc, parFilesDest);
     system(cmd);
 
