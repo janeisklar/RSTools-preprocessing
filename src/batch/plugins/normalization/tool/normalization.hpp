@@ -21,10 +21,11 @@ public:
     void destroy();
     rsUIInterface* createUI();
     void setUseNewANTS(bool useNewAnts);
-    
+
 protected:
     void _init();
     bool useNewAnts;
+    virtual bool _prepareStream();
 };
 
 }}}}} // namespace rstools::batch::plugins::normalization::tool
