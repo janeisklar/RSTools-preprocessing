@@ -18,7 +18,7 @@ char* MBSliceTiming::getCmd(bool asExecuted) {
     const char *input        = this->getArgument("in")->value;
     const char *output       = asExecuted ? this->getArgument("rsstream_out")->value : this->getArgument("out")->value;
     const char *finalOutput  = this->getArgument("out")->value;
-    char *tcustom      = this->getArgument("tcustom") == NULL ? rsString("") : this->getArgument("tcustom")->value;
+    char *tcustom            = this->getArgument("tcustom") == NULL ? rsString("") : this->getArgument("tcustom")->value;
     rsArgument *meanArg      = this->getArgument("mean");
     rsArgument *directionArg = this->getArgument("direction");
     
@@ -55,10 +55,19 @@ char* MBSliceTiming::getCmd(bool asExecuted) {
             strbuffer += sprintf(strbuffer, "%g", timingCorrectionInTR);
         }
 
+        rsFree(tcustom);
         tcustom = rsStringConcat(getTempDirectoryPath(), "/mb_timing_correction.txt", NULL);
         cmd = rsStringConcat("echo \"", timingCorrections, "\" | tr -s ',' '\\n' > ", tcustom, "\n", NULL);
         rsFree(oldCmd);
         rsFree(timingCorrections);
+    } else if (!timingInfoSpecififed && !asExecuted) {
+        // we're not actually executing just yet, so simply show how we would extract the data if we were to run it
+        // (we can't read out the slice timing info from the header as the file might not yet exist)
+        oldCmd = cmd;
+        cmd = rsStringConcat("$(rsinfo -i ", input, " -k MosaicRefAcqTimes) > tcustom.txt\n", NULL);
+        rsFree(tcustom);
+        rsFree(oldCmd);
+        tcustom = rsString("tcustom.txt");
     }
 
     // prepare the call for the slicetimer
