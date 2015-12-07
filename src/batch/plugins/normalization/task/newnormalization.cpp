@@ -17,6 +17,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
     
     // acquire parameters
     rsArgument *input                  = this->getArgument("input");
+    rsArgument *meanStream             = this->getArgument("rsstream_output");
     rsArgument *mean                   = this->getArgument("mean");
     const char *brainMask              = this->getDefaultArgumentValue("brainMask");
     const char *epiTemplate            = this->getDefaultArgumentValue("epiTemplate");
@@ -34,9 +35,13 @@ char* NewNormalization::getCmd(bool asExecuted) {
     const char *rstoolsPath = RSTOOLS_EXECUTABLES_PATH;
     
     // prepare values for the command
-    const char *meanCmd                = (mean==NULL)
-                                         ? "$tmpdir/mean.nii"
-                                         : mean->value;
+    const char *meanOut = (mean==NULL)
+                          ? "$tmpdir/mean.nii"
+                          : meanStream->value;
+
+    const char *meanIn  = (mean==NULL)
+                          ? "$tmpdir/mean.nii"
+                          : mean->value;
     
     const char *logKernelPath =  DATA_PATH "/" PACKAGE "/utils/logkernel_0.3.nii.gz";
 
@@ -48,7 +53,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
         fslPath, "/fslmaths ", epiTemplate, " -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_tpl.nii\n",
         "\n",
         "# compute EPI edges\n",
-        rstoolsPath, "/rsdeoblique -i ", meanCmd, " -r $tmpdir/deob_trans.txt -o $tmpdir/deobliqued_input.nii -v\n",
+        rstoolsPath, "/rsdeoblique -i ", meanIn, " -r $tmpdir/deob_trans.txt -o $tmpdir/deobliqued_input.nii -v\n",
         rstoolsPath, "/rszeropadding -i $tmpdir/deobliqued_input.nii -o $tmpdir/padded_input.nii -a 5 -b 5 -c 5 -d 5 -e 5 -f 5 -v\n",
         fslPath, "/fslmaths $tmpdir/padded_input.nii -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_input.nii\n",
         "\n",
@@ -60,7 +65,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
         ANTSPATH, "antsApplyTransforms -e 3 -d 3 -i ", brainMask, " -o $tmpdir/brainmask_input.nii -r $tmpdir/deobliqued_input.nii -t \"[$tmpdir/tpl0GenericAffine.mat,1]\" $tmpdir/tpl1InverseWarp.nii.gz -t \"[", epiTemplateAffine, ",1]\" -t ", epiTemplateInvWarp, "\n",
         "\n",
         "# create field of view mask\n",
-        fslPath, "/fslmaths ", input->value, " -Tstd -bin $tmpdir/fov_input.nii\n",
+        fslPath, "/fslmaths ", meanIn, " -thr 1 -uthr 0 -add 1 $tmpdir/fov_input.nii\n",
         ANTSPATH, "antsApplyTransforms -e 3 -d 3 -i $tmpdir/fov_input.nii -o $tmpdir/deobliqued_fov_input.nii -r $tmpdir/deobliqued_input.nii\n",
         fslPath, "/fslmaths $tmpdir/brainmask_input.nii -mas $tmpdir/deobliqued_fov_input.nii $tmpdir/fov_brainmask_input.nii\n",
         "\n",
@@ -84,7 +89,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
         "tmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'rstools-pps'`\n",
         "\n",
         "# compute mean\n",
-        fslPath, "/fslmaths ", input->value, " -Tmean ", meanCmd, "\n",
+        fslPath, "/fslmaths ", input->value, " -Tmean ", meanOut, "\n",
         stripskullCmd.c_str(),
         "\n",
         "# perform registration\n",

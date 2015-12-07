@@ -50,6 +50,14 @@ rsUIInterface* Realignment::createUI()
     o->cli_description     = rsString("path of the resulting de-spiked dataset");
     o->cli_arg_description = rsString("<volume>");
     rsUIAddOption(interface, o);
+
+    o = rsUINewOption();
+    o->name                = rsString("mean");
+    o->shorthand           = 'm';
+    o->type                = G_OPTION_ARG_FILENAME;
+    o->cli_description     = rsString("optional path of a mean image that will be created after realigning the image");
+    o->cli_arg_description = rsString("<volume>");
+    rsUIAddOption(interface, o);
     
     o = rsUINewOption();
     o->name                = rsString("stages");
@@ -106,7 +114,7 @@ void Realignment::_moveOutputIfNecessary()
 
     // copy .par file
     char *parFilesSrc  = rsStringConcat(tmpDirPath, "/stream.nii.par", NULL);
-    char *parFilesDest = rsStringConcat(streamTarget, ".par", NULL);
+    char *parFilesDest = rsStringConcat(streamTarget, ".par.txt", NULL);
     sprintf(cmd, "/bin/cp -f -p \'%s\' \'%s\'", parFilesSrc, parFilesDest);
     system(cmd);
 

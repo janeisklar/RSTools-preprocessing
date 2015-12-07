@@ -160,9 +160,34 @@ rsUIInterface* Normalization::createUI()
     return interface;
 }
 
-void Normalization::setUseNewANTS(bool useNewAnts) {
+void Normalization::setUseNewANTS(bool useNewAnts)
 {
     this->useNewAnts = useNewAnts;
 }
 
-}}}}}} // namespace rstools::batch::plugins::normalization::tool
+bool Normalization::_prepareStream()
+{
+    if (this->getUnixTask()->getArgument("mean") == NULL) {
+        return true;
+    }
+
+    // set the target path of the stream
+    streamTarget = rsString(this->getUnixTask()->getArgument("mean")->value);
+
+    // assemble temporary stream path
+    streamName = rsStringConcat(tmpDirPath, "/stream.nii", NULL);
+
+    // add stream to list of job arguments
+    rsArgument *arg = (rsArgument*)malloc(sizeof(rsArgument));
+    arg->key = rsString("rsstream_output");
+    arg->value = rsString(streamName);
+    getUnixTask()->addArgument(arg);
+
+    // read in header information of the input nifti
+    inputNifti = nifti_image_read(getUnixTask()->getArgument("input")->value, false);
+
+    // create stream
+    return this->_createStream(streamName);
+}
+
+}}}}} // namespace rstools::batch::plugins::normalization::tool
