@@ -37,7 +37,7 @@ char* MBSliceTiming::getCmd(bool asExecuted) {
 
     // check if we need to compute the slice timing correction ourselves
     bool timingInfoSpecififed = tcustom != NULL && strlen(tcustom) > 0;
-    bool hasTimingInfo = hasInputNiftiHeaderInformation() && !isnan(getInputNiftiHeaderInformation()->MosaicRefAcqTimes[0]);
+    bool hasTimingInfo = asExecuted && hasInputNiftiHeaderInformation() && !isnan(getInputNiftiHeaderInformation()->MosaicRefAcqTimes[0]);
     if (!timingInfoSpecififed && hasTimingInfo) {
         oldCmd = cmd;
 
