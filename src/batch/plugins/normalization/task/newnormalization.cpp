@@ -37,7 +37,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
     // prepare values for the command
     const char *meanOut = (mean==NULL)
                           ? "$tmpdir/mean.nii"
-                          : meanStream->value;
+                          : (asExecuted ? meanStream->value : mean->value);
 
     const char *meanIn  = (mean==NULL)
                           ? "$tmpdir/mean.nii"

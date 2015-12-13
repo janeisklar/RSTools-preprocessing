@@ -35,9 +35,10 @@ char* Realignment::getCmd(bool asExecuted) {
         cmd.append(" -stages ").append(stages->value);
     }
 
-    if (stages == NULL || strcmp(stages->value, "4") == 0) {
-        cmd.append(" -sinc_final");
-    }
+    // sinc_final interpolation has been disabled, as it takes too long and we interpolate it once more anyway
+    //if (stages == NULL || strcmp(stages->value, "4") == 0) {
+    //    cmd.append(" -sinc_final");
+    //}
 
     cmd.append(" -mats");
     cmd.append(" -plots");
