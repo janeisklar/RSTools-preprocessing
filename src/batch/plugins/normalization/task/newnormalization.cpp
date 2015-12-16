@@ -87,6 +87,7 @@ char* NewNormalization::getCmd(bool asExecuted) {
         "export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=", nThreads, "\n",
         "# create a temporary directory\n",
         "tmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'rstools-pps'`\n",
+        " echo \"Temporary directory: \"$tmpdir\n",
         "\n",
         "# compute mean\n",
         fslPath, "/fslmaths ", input->value, " -Tmean ", meanOut, "\n",
