@@ -53,7 +53,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,
 AC_CHECK_HEADERS([float.h string.h strings.h])
 
 # Check for RSTools which will already come with all the necessary dependencies
-PKG_CHECK_MODULES([RSTOOLS], [rstools >= 1.2.1])
+PKG_CHECK_MODULES([RSTOOLS], [rstools >= 1.2.2])
 AC_SUBST([RSTOOLS_CFLAGS])
 AC_SUBST([RSTOOLS_LIBS])
 LIBS=["$RSTOOLS_LIBS $LIBS"]
