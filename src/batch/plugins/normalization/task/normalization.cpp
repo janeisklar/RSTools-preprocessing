@@ -16,6 +16,7 @@ char* Normalization::getCmd(bool asExecuted) {
     
     // acquire parameters
     rsArgument *input                  = this->getArgument("input");
+    rsArgument *meanStream             = this->getArgument("rsstream_output");
     rsArgument *mean                   = this->getArgument("mean");
     const char *brainMask              = this->getDefaultArgumentValue("brainMask");
     const char *epiTemplate            = this->getDefaultArgumentValue("epiTemplate");
@@ -94,14 +95,18 @@ char* Normalization::getCmd(bool asExecuted) {
                                          ? "10000x10000x10000x10000x10000"
                                          : maxAffineIterations->value;
     
-    const char *meanCmd                = (mean==NULL)
-                                         ? "$tmpdir/mean.nii"
-                                         : mean->value;
+    const char *meanOut = (mean==NULL)
+                          ? "$tmpdir/mean.nii"
+                          : (asExecuted ? meanStream->value : mean->value);
+
+    const char *meanIn  = (mean==NULL)
+                          ? "$tmpdir/mean.nii"
+                          : mean->value;
     
     const char *logKernelPath =  DATA_PATH "/" PACKAGE "/utils/logkernel_0.3.nii.gz";
     
-    string source = meanCmd;
-    string target = epiTemplate;
+    string source = "$tmpdir/skullstripped_input.nii";
+    string target = "$tmpdir/skullstripped_tpl.nii";
     string stripskullCmd = "";
     
     if ( stripskull != NULL ) {
@@ -113,7 +118,7 @@ char* Normalization::getCmd(bool asExecuted) {
             fslPath, "/fslmaths ", epiTemplate, " -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_tpl.nii\n",
             "\n",
             "# compute EPI edges\n",
-            rstoolsPath, "/rszeropadding -i ", meanCmd, " -o $tmpdir/padded_input.nii -a 5 -b 5 -c 5 -d 5 -e 5 -f 5\n",
+            rstoolsPath, "/rszeropadding -i ", meanIn, " -o $tmpdir/padded_input.nii -a 5 -b 5 -c 5 -d 5 -e 5 -f 5\n",
             fslPath, "/fslmaths $tmpdir/padded_input.nii -kernel file ", logKernelPath, " -fmeanu $tmpdir/edges_input.nii\n",
             "\n",
             "# register EPI edges to EPI template edges\n",
@@ -121,7 +126,7 @@ char* Normalization::getCmd(bool asExecuted) {
             "\n",
             "# warp brain mask\n",
             ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_tpl.nii -R $tmpdir/edges_tpl.nii -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
-            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_input.nii -R ", meanCmd, " -i $tmpdir/tplAffine.txt $tmpdir/tplInverseWarp.nii.gz -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
+            ANTSPATH, "WarpImageMultiTransform 3 ", brainMask, " $tmpdir/brainmask_input.nii -R ", meanIn, " -i $tmpdir/tplAffine.txt $tmpdir/tplInverseWarp.nii.gz -i ", epiTemplateAffine, " ", epiTemplateInvWarp,"\n",
             "\n",
             "# create epi template mask\n",
             fslPath, "/fslmaths ", epiTemplate, " -mas $tmpdir/brainmask_tpl.nii $tmpdir/brainmasked_tpl.nii\n",
@@ -130,7 +135,7 @@ char* Normalization::getCmd(bool asExecuted) {
             fslPath, "/fslmaths $tmpdir/brainmasked_tpl.nii -add $tmpdir/brainmask_inv_tpl.nii ", target.c_str(), "\n",
             "\n",
             "# create epi mask\n",
-            fslPath, "/fslmaths ", meanCmd, " -mas $tmpdir/brainmask_input.nii $tmpdir/brainmasked_input.nii\n",
+            fslPath, "/fslmaths ", meanIn, " -mas $tmpdir/brainmask_input.nii $tmpdir/brainmasked_input.nii\n",
             "csfValue=$(", fslPath, "/fslstats $tmpdir/brainmasked_input.nii -k $tmpdir/brainmask_input.nii -p 95)\n",
             fslPath, "/fslmaths $tmpdir/brainmask_input.nii -binv -mul $csfValue $tmpdir/brainmask_inv_input.nii\n",
             fslPath, "/fslmaths $tmpdir/brainmasked_input.nii -add $tmpdir/brainmask_inv_input.nii ", source.c_str(), "\n",
@@ -143,7 +148,7 @@ char* Normalization::getCmd(bool asExecuted) {
         "tmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'rstools-pps'`\n",
         "\n",
         "# compute mean\n",
-        fslPath, "/fslmaths ", input->value, " -Tmean ", meanCmd, "\n",
+        fslPath, "/fslmaths ", input->value, " -Tmean ", meanOut, "\n",
         stripskullCmd.c_str(),
         "\n",
         "# perform registration\n",
